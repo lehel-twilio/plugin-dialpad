@@ -1,0 +1,13 @@
+[
+  {
+    "name": "DialpadPlugin",
+    "version": "1.1.0",
+    "class": "DialpadPlugin",
+    "requires": [
+      {
+        "@twilio/flex-ui": "^1.1.0"
+      }
+    ],
+    "src": "http://localhost:8080/plugin-dialpad.js"
+  }
+]
