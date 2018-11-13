@@ -1,0 +1,24 @@
+{
+  "name": "plugin-dialpad",
+  "version": "2.2.0",
+  "private": true,
+  "scripts": {
+    "prestart": "flex-check-start",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test --env=jsdom",
+    "eject": "react-app-rewired eject"
+  },
+  "devDependencies": {
+    "@twilio/flex-ui": "1.1.1",
+    "react-app-rewire-flex-plugin": "1.0.2",
+    "react-app-rewired": "1.6.2"
+  },
+  "dependencies": {
+    "flex-plugin": "1.0.2",
+    "react": "16.5.2",
+    "react-dom": "16.5.2",
+    "react-scripts": "1.1.5"
+  },
+  "config-overrides-path": "node_modules/react-app-rewire-flex-plugin"
+}
