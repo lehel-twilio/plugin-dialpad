@@ -22,6 +22,11 @@ Edit public/appConfig.js and add your accountSid and runtime domain (without pro
 
 Go to your [Twilio Functions](https://www.twilio.com/console/runtime/functions/manage) and deploy the functions in the /functions directory.
 
+In the [Function Configuration](https://www.twilio.com/console/runtime/functions/configure) tab you will need to make your credentials available in your Function code by checking the `Enable ACCOUNT_SID and AUTH_TOKEN` option. Additionally, you will need two configure two environment variables:
+
+`TWILIO_WORKSPACE_SID` Out of the box, `Flex Task Assignment` is the only available Workspace
+`TWILIO_WORKFLOW_SID:` Out of the box, `Assign to Anyone` is the only available Workflow
+
 **function paths should match file names**
 
 ### Build
