@@ -2,7 +2,7 @@
 
 Make outbound calls using Flex!
 
-![Dialpad](https://cinereous-mallard-4959.twil.io/assets/dialpad.png)
+![Dialpad](https://zaffre-cow-9057.twil.io/assets/68747470733a2f2f63696e6572656f75732d6d616c6c6172642d343935392e7477696c2e696f2f6173736574732f6469616c7061642e706e67.png)
 
 ## Instructions
 
