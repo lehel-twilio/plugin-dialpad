@@ -46,15 +46,12 @@ const plus = css`
   width: 15px;
   text-overflow: ellipsis;
   direction: rtl;
-  font-size: 3.5vh !important;
+  font-size: 26px !important;
 `
 
 const screenMainLine = css`
-  overflow: hidden;
+  ${plus};
   width: 205px;
-  text-overflow: ellipsis;
-  direction: rtl;
-  font-size: 3.5vh !important;
 `
 
 const screenWrapper = css`
@@ -74,7 +71,7 @@ const Button = styled('button')`
   background: none;
   box-shadow: none;
   border-radius: 0px;
-  font-size: 1.5vh;
+  font-size: 24px;
   font: Roboto;
   &:hover {
     border: 0;
