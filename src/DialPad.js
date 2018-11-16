@@ -128,14 +128,21 @@ export class DialPad extends React.Component {
   componentDidMount() {
     if (typeof this.props.content === "undefined") { //Only listen on the Dialer page
       document.addEventListener("keyup", this.eventlistener, false);
+      document.addEventListener("paste", this.pastelistener, false);
     }
   }
 
   componentWillUnmount() {
     document.removeEventListener("keyup", this.eventlistener, false);
+    document.removeEventListener("paste", this.pastelistener, false);
   }
 
   eventlistener = (e) => this.keyPressListener(e);
+
+  pastelistener = (e) => {
+    const paste = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g,''); //strip all non numeric characters from paste
+    this.setState({screenMainLine: (typeof this.state.screenMainLine === "undefined" ? paste : this.state.screenMainLine + paste)});
+  }
 
   keyPressListener(e) {
     if ((e.keyCode > 47 && e.keyCode < 58) || e.keyCode === 187) { //listen to 0-9 & +
@@ -143,8 +150,11 @@ export class DialPad extends React.Component {
     } else if (e.keyCode === 8) { //listen for backspace
       this.backspace();
     } else if (e.keyCode === 13) { //listen for enter
-      const number = this.state.plus === 'undefined' ? this.state.screenMainLine : `+${this.state.screenMainLine}`;
-      this.dial(number, this.props.url, this.props.from, this.props.workerContactUri);
+      const number = (typeof this.state.plus === 'undefined') ? this.state.screenMainLine : `+${this.state.screenMainLine}`;
+      this.setState({screenMainLine: ""});
+      if (number !== "") {
+        this.dial(number, this.props.url, this.props.from, this.props.workerContactUri);
+      };
     }
   }
 
@@ -166,18 +176,23 @@ export class DialPad extends React.Component {
 
   dial(number, url, from, workerContactUri) {
 
-    fetch(`${url}/create-new-task`, {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      method: 'POST',
-      body: `From=${from}&To=${number}&Worker=${workerContactUri}&Url=${url}`
-    })
-    .then(response => response.json())
-    .then(json => {
-      Actions.invokeAction("NavigateToView", {viewName: "agent-desktop"});
-      Actions.invokeAction("SelectTask", {taskSid: json});
-    })
+    if (number.length > 0) {
+
+      fetch(`${url}/create-new-task`, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        method: 'POST',
+        body: `From=${from}&To=${number}&Worker=${workerContactUri}&Url=${url}`
+      })
+      .then(response => response.json())
+      .then(json => {
+        Actions.invokeAction("NavigateToView", {viewName: "agent-desktop"});
+        Actions.invokeAction("SelectTask", {taskSid: json});
+      })
+    } else {
+      console.log("Invalid number dialed");
+    }
   }
 
   numbers = [
@@ -219,8 +234,11 @@ export class DialPad extends React.Component {
     } else {
       return (<div>
         <Phone className={dialbutton} onClick={e => {
-          const number = this.state.plus === 'undefined' ? this.state.screenMainLine : `+${this.state.screenMainLine}`;
-          this.dial(number, this.props.url, this.props.from, this.props.workerContactUri);
+          const number = (typeof this.state.plus === 'undefined') ? this.state.screenMainLine : `+${this.state.screenMainLine}`;
+          this.setState({screenMainLine: ""});
+          if (number !== "") {
+            this.dial(number, this.props.url, this.props.from, this.props.workerContactUri);
+          };
         }} />
       </div>);
     }
