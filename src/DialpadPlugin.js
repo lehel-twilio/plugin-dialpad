@@ -3,6 +3,7 @@ import React from 'react';
 import * as Flex from '@twilio/flex-ui';
 import DialPad from './DialPad';
 import DialerButton from './DialerButton';
+import CallButton from './CallButton';
 import './CustomActions';
 
 export default class DialpadPlugin extends FlexPlugin {
@@ -30,5 +31,8 @@ export default class DialpadPlugin extends FlexPlugin {
     //adds the dialer view
     flex.ViewCollection.Content.add(<flex.View name="dialer" key="dialpad1"><DialPad key="dialpad2"/></flex.View>);
     flex.CallCanvas.Content.add(<DialPad key="dialpad3"/>);
+
+    //adds the dial button to SMS
+    flex.TaskCanvasHeader.Content.add(<CallButton key="callbutton"/>);
   }
 }

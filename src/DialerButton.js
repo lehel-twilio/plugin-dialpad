@@ -10,7 +10,7 @@ export default class DialerButton extends React.Component{
             icon="Call"
             iconActive="CallBold"
             isActive={this.props.activeView === "dialer"}
-            onClick={() => Actions.invokeAction("NavigateToView", {viewName: "dialer"})}>My custom page</SideLink>
+            onClick={() => Actions.invokeAction("NavigateToView", {viewName: "dialer"})}>Dialpad</SideLink>
             ;
     }
 }
