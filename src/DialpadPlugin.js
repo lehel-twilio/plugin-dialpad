@@ -15,7 +15,14 @@ export default class DialpadPlugin extends FlexPlugin {
 
     //auto-accepts tasks
     manager.workerClient.on("reservationCreated", reservation => {
-      Flex.Actions.invokeAction("AcceptTask", {sid: reservation.sid});
+      const {
+        sid,
+        task,
+      } = reservation;
+
+      if (task.taskChannelUniqueName === "voice" && task.attributes.direction === "outbound") {
+        Flex.Actions.invokeAction("AcceptTask", {sid: reservation.sid});
+      }
     });
 
     //Place Task into wrapUp on remote party disconnect
