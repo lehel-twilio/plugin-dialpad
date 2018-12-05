@@ -59,15 +59,16 @@ Actions.replaceAction("UnholdCall", (payload, original) => {
   })
 })
 
-Actions.replaceAction("HangupCall", (payload, original) => {
+Actions.addListener("afterHangupCall", (payload, abortFunction) => {
   return new Promise((resolve, reject) => {
-
-    const task = payload.task;
-
-    original(payload);
-    task.wrapUp();
-    resolve();
-  })
+    const { task } = payload;
+    try {
+      task.wrapUp();
+      resolve();
+    } catch(err) {
+      abortFunction();
+    }
+  });
 })
 
 function toggleHold(conference, participant, hold, original, payload, reservation) {
