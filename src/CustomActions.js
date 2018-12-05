@@ -28,7 +28,7 @@ Actions.replaceAction("HoldCall", (payload, original) => {
     const participant = task.attributes.conference.participants.customer;
     const hold = true;
 
-    if (task.taskChannelUniqueName === "voice" && reservation.task.attributes.direction === "outbound") {
+    if (task.taskChannelUniqueName === "custom1" && reservation.task.attributes.direction === "outbound") {
       toggleHold(conference, participant, hold, original, payload, reservation);
     } else {
       original(payload);
@@ -39,24 +39,24 @@ Actions.replaceAction("HoldCall", (payload, original) => {
 
 Actions.replaceAction("UnholdCall", (payload, original) => {
   return new Promise((resolve, reject) => {
-
     const task = payload.task;
-    if (Number(task.age) <= 2) {
-      original(payload)
-    } else {
-      const reservation = payload.task.sourceObject;
-      const conference = task.attributes.conference.sid;
-      const participant = task.attributes.conference.participants.customer;
-      const hold = false;
+    const reservation = task.sourceObject;
+    const { conference } = task.attributes;
 
-      if (task.taskChannelUniqueName === "voice" && reservation.task.attributes.direction === "outbound") {
-        toggleHold(conference, participant, hold, original, payload, reservation);
-      } else {
-        original(payload);
-      }
+    if (!conference || Object.keys(conference.participants) === 0) {
+      // Do nothing if there is no one in the call.
+      return;
     }
+    const { customer } = conference.participants;
+
+    if (task.taskChannelUniqueName === "custom1" && task.attributes.direction === "outbound") {
+      toggleHold(conference.sid, customer, false, original, payload, reservation);
+      // No need for further action.
+      return;
+    }
+    // Promise chaining...
     resolve();
-  })
+  }).then(() => original(payload));
 })
 
 Actions.replaceAction("HangupCall", (payload, original) => {
