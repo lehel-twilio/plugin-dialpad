@@ -180,7 +180,7 @@ export class DialPad extends React.Component {
           'Content-Type': 'application/x-www-form-urlencoded'
         },
         method: 'POST',
-        body: `From=${from}&To=${number}&Worker=${workerContactUri}&Url=${url}`
+        body: `From=${encodeURIComponent(from)}&To=${encodeURIComponent(number)}&Worker=${workerContactUri}&Url=${url}`
       })
       .then(response => response.json())
       .then(json => {
