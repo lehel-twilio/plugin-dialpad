@@ -25,10 +25,11 @@ exports.handler = function(context, event, callback) {
           name: 'Your Company Name',
           from: event.From,
           url: event.Url,
-          targetWorker: event.Worker
+          targetWorker: event.Worker,
+          autoAnswer: 'true'
         }),
       workflowSid: workflowSid,
-      taskChannel: 'voice'
+      taskChannel: 'custom1'
 
     })
   .then(task => {

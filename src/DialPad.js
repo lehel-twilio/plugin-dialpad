@@ -3,8 +3,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Actions } from '@twilio/flex-ui';
 import { css } from 'react-emotion';
-import styled from 'react-emotion';
 
+import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import Phone from '@material-ui/icons/Phone';
 import CallEnd from '@material-ui/icons/CallEnd';
@@ -60,40 +60,6 @@ const screenWrapper = css`
   align-items: center;
   justify-content: flex-end;
   padding-left: 20px;
-`
-
-const Button = styled('button')`
-  background-color: #FFFFFF !important;
-  width: 100px;
-  height: 40px;
-  color: #000000;
-  border: 0;
-  background: none;
-  box-shadow: none;
-  border-radius: 0px;
-  font-size: 24px;
-  font: Roboto;
-  &:hover {
-    border: 0;
-    background: none;
-    box-shadow: none;
-    border-radius: 0px;
-    outline: 0;
-  }
-  &:focus {
-    border: 0;
-    background: none;
-    box-shadow: none;
-    border-radius: 0px;
-    outline: 0;
-  }
-  &:active {
-    border: 0;
-    background: none;
-    box-shadow: none;
-    border-radius: 0px;
-    outline: 0;
-  }
 `
 
 const iconbuttons = css`
@@ -206,7 +172,7 @@ export class DialPad extends React.Component {
 
       {
         row.map(function(item, i) {
-          return (<Button key={item} onClick={e => originalThis.buttonPress(item, originalThis.props.activeCall)}>{item}</Button>);
+          return (<Button size='large' key={item} onClick={e => originalThis.buttonPress(item, originalThis.props.activeCall)}>{item}</Button>);
         })
       }
 
@@ -260,9 +226,9 @@ export class DialPad extends React.Component {
       return <div/>;
     } else {
       return (<div>
-        <Button key="placeHolder" > </Button>
-        <Button key="+" onClick={e => this.buttonPress("+", this.props.activeCall)}>+</Button>
-        <Button key="placeHolder2" > </Button>
+        <Button size='large' key="placeHolder" > </Button>
+        <Button size='large' key="+" onClick={e => this.buttonPress("+", this.props.activeCall)}>+</Button>
+        <Button size='large' key="placeHolder2" > </Button>
       </div>)
     }
   }

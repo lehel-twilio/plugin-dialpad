@@ -4,7 +4,7 @@ Actions.replaceAction("AcceptTask", (payload, original) => {
   return new Promise((resolve, reject) => {
     const reservation = payload.task.sourceObject;
 
-    if (payload.task.taskChannelUniqueName === "voice" && payload.task.attributes.direction === "outbound") {
+    if (payload.task.taskChannelUniqueName === "custom1" && payload.task.attributes.direction === "outbound") {
 
       reservation.call(reservation.task.attributes.from,
         `${payload.task.attributes.url}/agent-outbound-join?taskSid=${payload.task.taskSid}`, {
