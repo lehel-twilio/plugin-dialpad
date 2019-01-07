@@ -15,13 +15,15 @@ export default class DialpadPlugin extends FlexPlugin {
 
     //auto-accepts tasks
     manager.workerClient.on("reservationCreated", reservation => {
-      Flex.Actions.invokeAction("AcceptTask", {sid: reservation.sid});
+      if (reservation.task.attributes.autoAnswer === 'true') {
+        Flex.Actions.invokeAction("AcceptTask", {sid: reservation.sid});
+      }
     });
 
     //Place Task into wrapUp on remote party disconnect
     manager.voiceClient.on("disconnect", function(connection) {
       manager.workerClient.reservations.forEach(reservation => {
-        if (reservation.task.attributes.worker_call_sid === connection.parameters.CallSid && reservation.task.taskChannelUniqueName === "voice" &&
+        if (reservation.task.attributes.worker_call_sid === connection.parameters.CallSid && reservation.task.taskChannelUniqueName === "custom1" &&
               reservation.task.attributes.direction === "outbound") {
           reservation.task.wrapUp();
         };
@@ -34,5 +36,10 @@ export default class DialpadPlugin extends FlexPlugin {
 
     //adds the dial button to SMS
     flex.TaskCanvasHeader.Content.add(<CallButton key="callbutton"/>);
+
+    //create custom task TaskChannel
+    const outboundVoiceChannel = Flex.DefaultTaskChannels.createCallTaskChannel("custom1",
+      (task) => task.taskChannelUniqueName === "custom1");
+    Flex.TaskChannels.register(outboundVoiceChannel);
   }
 }
