@@ -15,7 +15,7 @@ export default class DialpadPlugin extends FlexPlugin {
 
     //auto-accepts tasks
     manager.workerClient.on("reservationCreated", reservation => {
-      if (reservation.task.attributes.autoAnswer === 'true') {
+      if (reservation.task.attributes.autoAnswer === true) {
         Flex.Actions.invokeAction("AcceptTask", {sid: reservation.sid});
       }
     });

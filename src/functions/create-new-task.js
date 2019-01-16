@@ -26,7 +26,7 @@ exports.handler = function(context, event, callback) {
           from: event.From,
           url: event.Url,
           targetWorker: event.Worker,
-          autoAnswer: 'true'
+          autoAnswer: true
         }),
       workflowSid: workflowSid,
       taskChannel: 'custom1'
