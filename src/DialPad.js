@@ -108,7 +108,7 @@ export class DialPad extends React.Component {
   }
 
   keyPressListener(e) {
-    if ((e.keyCode > 47 && e.keyCode < 58) || e.keyCode === 187) { //listen to 0-9 & +
+    if ((e.keyCode > 47 && e.keyCode < 58) || (e.keyCode >= 96 && e.keyCode <= 105) || e.keyCode === 187) { //listen to 0-9 & +
       this.buttonPress(e.key, this.props.activeCall);
     } else if (e.keyCode === 8) { //listen for backspace
       this.backspace();
