@@ -28,7 +28,7 @@ Actions.replaceAction("HoldCall", (payload, original) => {
     const participant = task.attributes.conference.participants.customer;
     const hold = true;
 
-    if (task.taskChannelUniqueName === "voice" && reservation.task.attributes.direction === "outbound") {
+    if (task.taskChannelUniqueName === "custom1" && reservation.task.attributes.direction === "outbound") {
       toggleHold(conference, participant, hold, original, payload, reservation);
     } else {
       original(payload);
@@ -49,7 +49,7 @@ Actions.replaceAction("UnholdCall", (payload, original) => {
       const participant = task.attributes.conference.participants.customer;
       const hold = false;
 
-      if (task.taskChannelUniqueName === "voice" && reservation.task.attributes.direction === "outbound") {
+      if (task.taskChannelUniqueName === "custom1" && reservation.task.attributes.direction === "outbound") {
         toggleHold(conference, participant, hold, original, payload, reservation);
       } else {
         original(payload);

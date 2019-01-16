@@ -34,12 +34,10 @@ exports.handler = function(context, event, callback) {
     })
   .then(task => {
     response.setBody( task.sid );
-    console.log(response);
-    console.log(task);
     callback(null, response);
   })
   .catch((error) => {
-    console.log("error");
     console.log(error);
+    callback(error);
   });
 };
