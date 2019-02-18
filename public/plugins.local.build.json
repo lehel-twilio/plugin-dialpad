@@ -1,0 +1,13 @@
+[
+  {
+    "name": "ConferencePlugin",
+    "version": "0.0.0",
+    "class": "ConferencePlugin",
+    "requires": [
+      {
+        "@twilio/flex-ui": "^1.0.0"
+      }
+    ],
+    "src": "http://127.0.0.1:8085"
+  }
+]
