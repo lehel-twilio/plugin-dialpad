@@ -1,16 +1,24 @@
-import { Actions } from "@twilio/flex-ui";
+import { Actions } from '@twilio/flex-ui';
 
-Actions.replaceAction("AcceptTask", (payload, original) => {
+Actions.replaceAction('AcceptTask', (payload, original) => {
   return new Promise((resolve, reject) => {
     const reservation = payload.task.sourceObject;
 
-    if (payload.task.taskChannelUniqueName === "custom1" && payload.task.attributes.direction === "outbound") {
+    if (payload.task.taskChannelUniqueName === 'custom1' && payload.task.attributes.direction === 'outbound') {
 
-      reservation.call(reservation.task.attributes.from,
-        `${payload.task.attributes.url}/agent-outbound-join?taskSid=${payload.task.taskSid}`, {
-          accept: true
-        }
-      )
+      if (reservation.task.attributes.conference === 'true') {
+        reservation.call(reservation.task.attributes.from,
+          `${payload.task.attributes.url}/agent-join-conference?conferenceSid=${payload.task.taskSid}`, {
+            accept: true
+          }
+        )
+      } else {
+        reservation.call(reservation.task.attributes.from,
+          `${payload.task.attributes.url}/agent-outbound-join?taskSid=${payload.task.taskSid}`, {
+            accept: true
+          }
+        )
+      }
 
     } else {
       original(payload)
@@ -19,7 +27,7 @@ Actions.replaceAction("AcceptTask", (payload, original) => {
   })
 })
 
-Actions.replaceAction("HoldCall", (payload, original) => {
+Actions.replaceAction('HoldCall', (payload, original) => {
   return new Promise((resolve, reject) => {
 
     const task = payload.task;
@@ -28,7 +36,7 @@ Actions.replaceAction("HoldCall", (payload, original) => {
     const participant = task.attributes.conference.participants.customer;
     const hold = true;
 
-    if (task.taskChannelUniqueName === "custom1" && reservation.task.attributes.direction === "outbound") {
+    if (task.taskChannelUniqueName === 'custom1' && reservation.task.attributes.direction === 'outbound') {
       toggleHold(conference, participant, hold, original, payload, reservation);
     } else {
       original(payload);
@@ -37,7 +45,7 @@ Actions.replaceAction("HoldCall", (payload, original) => {
   })
 })
 
-Actions.replaceAction("UnholdCall", (payload, original) => {
+Actions.replaceAction('UnholdCall', (payload, original) => {
   return new Promise((resolve, reject) => {
 
     const task = payload.task;
@@ -49,7 +57,7 @@ Actions.replaceAction("UnholdCall", (payload, original) => {
       const participant = task.attributes.conference.participants.customer;
       const hold = false;
 
-      if (task.taskChannelUniqueName === "custom1" && reservation.task.attributes.direction === "outbound") {
+      if (task.taskChannelUniqueName === 'custom1' && reservation.task.attributes.direction === 'outbound') {
         toggleHold(conference, participant, hold, original, payload, reservation);
       } else {
         original(payload);
@@ -59,7 +67,7 @@ Actions.replaceAction("UnholdCall", (payload, original) => {
   })
 })
 
-Actions.replaceAction("HangupCall", (payload, original) => {
+Actions.replaceAction('HangupCall', (payload, original) => {
   return new Promise((resolve, reject) => {
 
     const task = payload.task;

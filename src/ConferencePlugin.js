@@ -34,9 +34,7 @@ export default class ConferencePlugin extends FlexPlugin {
 
     //adds the dialer view
     flex.ViewCollection.Content.add(<flex.View name='dialer' key='dialpad1'><DialPad key='dialpad2'/></flex.View>);
-    //flex.CallCanvas.Content.add(<DialPad key='dialpad3'/>);
-    flex.CallCanvas.Content.add(<ConferenceButton key='conference' />);
-    flex.WorkerDirectory.Content.add(<ConferenceButton key='conference' />);
+    flex.CallCanvas.Content.add(<ConferenceButton key='conference' insightsClient={manager.insightsClient}/>);
 
     //adds the dial button to SMS
     flex.TaskCanvasHeader.Content.add(<CallButton key='callbutton'/>);

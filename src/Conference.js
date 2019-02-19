@@ -1,21 +1,73 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Select from 'react-select';
 import { css } from 'react-emotion';
-import { withTaskContext } from "@twilio/flex-ui";
+import { withTaskContext } from '@twilio/flex-ui';
 import { connect } from 'react-redux';
 
 import { withStyles } from '@material-ui/core/styles';
+import { emphasize } from '@material-ui/core/styles/colorManipulator';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import GroupAdd from '@material-ui/icons/GroupAdd';
 import GridOn from '@material-ui/icons/GridOn';
+import Forward from '@material-ui/icons/Forward';
 import Backspace from '@material-ui/icons/Backspace';
+import Typography from '@material-ui/core/Typography';
+import NoSsr from '@material-ui/core/NoSsr';
 import TextField from '@material-ui/core/TextField';
+import Paper from '@material-ui/core/Paper';
+import MenuItem from '@material-ui/core/MenuItem';
 
 const styles = theme => ({
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
+  },
+  root: {
+    flexGrow: 1,
+    height: 250,
+  },
+  input: {
+    display: 'flex',
+    padding: 0,
+  },
+  valueContainer: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    flex: 1,
+    alignItems: 'center',
+    overflow: 'hidden',
+  },
+  chip: {
+    margin: `${theme.spacing.unit / 2}px ${theme.spacing.unit / 4}px`,
+  },
+  chipFocused: {
+    backgroundColor: emphasize(
+      theme.palette.type === 'light' ? theme.palette.grey[300] : theme.palette.grey[700],
+      0.08,
+    ),
+  },
+  noOptionsMessage: {
+    padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
+  },
+  singleValue: {
+    fontSize: 16,
+  },
+  placeholder: {
+    position: 'absolute',
+    left: 2,
+    fontSize: 16,
+  },
+  paper: {
+    position: 'absolute',
+    zIndex: 1,
+    marginTop: theme.spacing.unit,
+    left: 0,
+    right: 0,
+  },
+  divider: {
+    height: theme.spacing.unit * 2,
   }
 });
 
@@ -28,6 +80,10 @@ const conferenceButton = css`
 `
 
 const keypadButton = css`
+  margin: 20px;
+`
+
+const forwardButton = css`
   margin: 20px;
 `
 
@@ -87,12 +143,105 @@ const screenMainLine = css`
 
 const backspaceButton = css``
 
+function NoOptionsMessage(props) {
+  return (
+    <Typography
+      color='textSecondary'
+      className={props.selectProps.classes.noOptionsMessage}
+      {...props.innerProps}
+    >
+      {props.children}
+    </Typography>
+  );
+}
+
+function inputComponent({ inputRef, ...props }) {
+  return <div ref={inputRef} {...props} />;
+}
+
+function Control(props) {
+  return (
+    <TextField
+      fullWidth
+      InputProps={{
+        inputComponent,
+        inputProps: {
+          className: props.selectProps.classes.input,
+          inputRef: props.innerRef,
+          children: props.children,
+          ...props.innerProps,
+        },
+      }}
+      {...props.selectProps.textFieldProps}
+    />
+  );
+}
+
+function Option(props) {
+  return (
+    <MenuItem
+      buttonRef={props.innerRef}
+      selected={props.isFocused}
+      component='div'
+      style={{
+        fontWeight: props.isSelected ? 500 : 400,
+      }}
+      {...props.innerProps}
+    >
+      {props.children}
+    </MenuItem>
+  );
+}
+
+function Placeholder(props) {
+  return (
+    <Typography
+      color='textSecondary'
+      className={props.selectProps.classes.placeholder}
+      {...props.innerProps}
+    >
+      {props.children}
+    </Typography>
+  );
+}
+
+function SingleValue(props) {
+  return (
+    <Typography className={props.selectProps.classes.singleValue} {...props.innerProps}>
+      {props.children}
+    </Typography>
+  );
+}
+
+function ValueContainer(props) {
+  return <div className={props.selectProps.classes.valueContainer}>{props.children}</div>;
+}
+
+function Menu(props) {
+  return (
+    <Paper square className={props.selectProps.classes.paper} {...props.innerProps}>
+      {props.children}
+    </Paper>
+  );
+}
+
+const components = {
+  Control,
+  Menu,
+  NoOptionsMessage,
+  Option,
+  Placeholder,
+  SingleValue,
+  ValueContainer,
+};
+
 export class ConferenceButton2 extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       mode: 'none',
-      screenMainLine: ''
+      screenMainLine: '',
+      transferTo: ''
     }
   };
 
@@ -101,6 +250,19 @@ export class ConferenceButton2 extends React.Component {
       document.addEventListener('keyup', this.eventListener, false);
       document.addEventListener('paste', this.pasteListener, false);
     }
+
+    //Populate a list of workers in TaskRouter to be used in the Search Box
+    const query = '';
+    console.log('=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
+    console.log(this.props);
+    this.props.insightsClient.instantQuery('tr-worker')
+      .then((q: InstantQuery) => {
+        this.workersSearch = q;
+        q.on('searchResult', (items: any) => {
+          this.setState({ workerList: items });
+        });
+        q.search(query);
+      });
   }
 
   componentWillUnmount() {
@@ -114,6 +276,12 @@ export class ConferenceButton2 extends React.Component {
     const paste = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g,''); //strip all non numeric characters from paste
     this.setState({screenMainLine: (typeof this.state.screenMainLine === 'undefined' ? paste : this.state.screenMainLine + paste)});
   }
+
+  handleSearchChange = name => value => {
+    this.setState({
+      [name]: value,
+    });
+  };
 
   numbers = [
     [ '1', '2', '3' ],
@@ -136,7 +304,17 @@ export class ConferenceButton2 extends React.Component {
   })
 
   dialPad = () => {
-    const { classes } = this.props;
+    const { classes, theme } = this.props;
+
+    const selectStyles = {
+      input: base => ({
+        ...base,
+        color: theme.palette.text.primary,
+        '& input': {
+          font: 'inherit',
+        },
+      }),
+    };
 
     if (this.state.mode === 'dialpad') {
       return (
@@ -147,20 +325,36 @@ export class ConferenceButton2 extends React.Component {
         </div>
       )
     } else if (this.state.mode === 'conference') {
+      //Populate suggestions list
+      let suggestions = [];
+      for (let i in this.state.workerList) {
+        suggestions.push({
+          label: this.state.workerList[i].attributes.full_name,
+          value: this.state.workerList[i].attributes.contact_uri
+        });
+      };
+
       return (
         <div className={conferenceKeypad}>
           <this.screen/>
-          <TextField
-            id="outlined-search"
-            label="Search"
-            type="search"
-            className={classes.textField}
-            margin="normal"
-            variant="outlined"
-          />
+          <NoSsr>
+            <Select
+              classes={classes}
+              styles={selectStyles}
+              options={suggestions}
+              components={components}
+              value={this.state.single}
+              onChange={this.handleSearchChange('transferTo')}
+              placeholder='Search'
+              isClearable
+            />
+          </NoSsr>
           <div className={numpadContainer}>
             {this.buttons.map((button) => (button))}
           </div>
+          <IconButton color='inherit' className={iconButtons} component='div'>
+            <Forward className={forwardButton} onClick={e => this.addConferenceParticipant()}/>
+          </IconButton>
         </div>
       )
     } else {
@@ -227,15 +421,16 @@ export class ConferenceButton2 extends React.Component {
   }
 
   addConferenceParticipant() {
-
-    console.log('Conference Button pressed');
+    //If Worker is selected, add worker to conference, otherwise add number from screenMainLine
+    const to = typeof(this.state.transferTo) === 'object' ? this.state.transferTo.value : this.state.screenMainLine;
+    const from = typeof(this.state.transferTo) === 'object' ? this.props.workerName : this.props.from;
 
     fetch(`${this.props.url}/add-conference-participant`, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       method: 'POST',
-      body: `taskSid=${this.props.task.taskSid}&from=${this.props.from}&to=+18009505114`
+      body: `taskSid=${this.props.task.taskSid}&from=${from}&to=${to}&url=${this.props.url}`
     })
     .then(response => response.json())
     .then(json => {
@@ -244,12 +439,10 @@ export class ConferenceButton2 extends React.Component {
   }
 
   displayDialpad() {
-    console.log('Dialpad button clicked');
     this.setState({ mode: this.state.mode === 'dialpad' ? 'none' : 'dialpad' });
   }
 
   displayConferenceKeypad() {
-    console.log('Conference button clicked');
     this.setState({ mode: this.state.mode === 'conference' ? 'none' : 'conference' });
   }
 
@@ -268,6 +461,7 @@ export class ConferenceButton2 extends React.Component {
 
 ConferenceButton2.propTypes = {
   classes: PropTypes.object.isRequired,
+  theme: PropTypes.object.isRequired,
 };
 
 const ConferenceButton = withTaskContext(ConferenceButton2);
@@ -279,6 +473,7 @@ const mapStateToProps = state => {
       : ('https://' + (state.flex.config.serviceBaseUrl.slice(-1) === '/' ? state.flex.config.serviceBaseUrl.substring(0, state.flex.config.serviceBaseUrl.length - 1) : state.flex.config.serviceBaseUrl)),
     from: state.flex.worker.attributes.phone,
     activeCall: state.flex.phone.connections,
+    workerName: state.flex.worker.attributes.full_name,
   }
 }
 
