@@ -6,7 +6,7 @@ Actions.replaceAction('AcceptTask', (payload, original) => {
 
     if (payload.task.taskChannelUniqueName === 'custom1' && payload.task.attributes.direction === 'outbound') {
 
-      if (reservation.task.attributes.conference === 'true') {
+      if (typeof(reservation.task.attributes.conferenceSid) !== 'undefined') {
         reservation.call(reservation.task.attributes.from,
           `${payload.task.attributes.url}/agent-join-conference?conferenceSid=${payload.task.taskSid}`, {
             accept: true
@@ -52,6 +52,10 @@ Actions.replaceAction('UnholdCall', (payload, original) => {
     if (Number(task.age) <= 2) {
       original(payload)
     } else {
+
+      console.log('=-=-=-=-=-=-=-=-=-=-=-=-=-=');
+      console.log(task.attributes);
+
       const reservation = payload.task.sourceObject;
       const conference = task.attributes.conference.sid;
       const participant = task.attributes.conference.participants.customer;
