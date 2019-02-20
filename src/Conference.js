@@ -246,15 +246,11 @@ export class ConferenceButton2 extends React.Component {
   };
 
   componentDidMount() {
-    if (typeof this.props.content === 'undefined') { //Only listen on the Dialer page
-      document.addEventListener('keyup', this.eventListener, false);
-      document.addEventListener('paste', this.pasteListener, false);
-    }
+    document.addEventListener('keyup', this.eventListener, false);
+    document.addEventListener('paste', this.pasteListener, false);
 
     //Populate a list of workers in TaskRouter to be used in the Search Box
     const query = '';
-    console.log('=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
-    console.log(this.props);
     this.props.insightsClient.instantQuery('tr-worker')
       .then((q: InstantQuery) => {
         this.workersSearch = q;
@@ -351,6 +347,7 @@ export class ConferenceButton2 extends React.Component {
           </NoSsr>
           <div className={numpadContainer}>
             {this.buttons.map((button) => (button))}
+            <this.plusButton/>
           </div>
           <IconButton color='inherit' className={iconButtons} component='div'>
             <Forward className={forwardButton} onClick={e => this.addConferenceParticipant()}/>
@@ -396,11 +393,8 @@ export class ConferenceButton2 extends React.Component {
     } else if (e.keyCode === 8) { //listen for backspace
       this.backspace();
     } else if (e.keyCode === 13) { //listen for enter
-      const number = (typeof this.state.plus === 'undefined') ? this.state.screenMainLine : `+${this.state.screenMainLine}`;
+      this.addConferenceParticipant();
       this.setState({screenMainLine: ''});
-      if (number !== '') {
-        this.dial(number, this.props.url, this.props.from, this.props.workerContactUri);
-      };
     }
   }
 
@@ -409,14 +403,15 @@ export class ConferenceButton2 extends React.Component {
   }
 
   buttonPress(key, activeCall) {
-    if (activeCall.length > 0) {
+    //Only send DTMF in dialpad mode
+    if (this.state.mode === 'dialpad') {
       activeCall[0].source.sendDigits(key);
-    }
-
-    if (key === '+') {
-      this.setState({plus: this.state.plus === '+' ? '' : '+'});
     } else {
-      this.setState({screenMainLine: (typeof this.state.screenMainLine === 'undefined' ? key : this.state.screenMainLine + key)});
+      if (key === '+') {
+        this.setState({plus: this.state.plus === '+' ? '' : '+'});
+      } else {
+        this.setState({screenMainLine: (typeof this.state.screenMainLine === 'undefined' ? key : this.state.screenMainLine + key)});
+      }
     }
   }
 
@@ -424,6 +419,10 @@ export class ConferenceButton2 extends React.Component {
     //If Worker is selected, add worker to conference, otherwise add number from screenMainLine
     const to = typeof(this.state.transferTo) === 'object' ? this.state.transferTo.value : this.state.screenMainLine;
     const from = typeof(this.state.transferTo) === 'object' ? this.props.workerName : this.props.from;
+
+    console.log(this.state.screenMainLine);
+    console.log(to);
+    console.log(typeof(this.state.transferTo));
 
     fetch(`${this.props.url}/add-conference-participant`, {
       headers: {

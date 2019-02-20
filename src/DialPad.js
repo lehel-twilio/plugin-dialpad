@@ -98,6 +98,7 @@ export class DialPad extends React.Component {
   componentWillUnmount() {
     document.removeEventListener('keyup', this.eventListener, false);
     document.removeEventListener('paste', this.pasteListener, false);
+    console.log('Removing event listener');
   }
 
   eventListener = (e) => this.keyPressListener(e);
