@@ -6,13 +6,14 @@ Actions.replaceAction('AcceptTask', (payload, original) => {
 
     if (payload.task.taskChannelUniqueName === 'custom1' && payload.task.attributes.direction === 'outbound') {
 
+      //Join existing conference as 3rd particpant
       if (typeof(reservation.task.attributes.conferenceSid) !== 'undefined') {
         reservation.call(reservation.task.attributes.from,
           `${payload.task.attributes.url}/agent-join-conference?conferenceSid=${reservation.task.attributes.conferenceSid}`, {
             accept: true
           }
         )
-      } else {
+      } else { //Place outbound call
         reservation.call(reservation.task.attributes.from,
           `${payload.task.attributes.url}/agent-outbound-join?taskSid=${payload.task.taskSid}`, {
             accept: true

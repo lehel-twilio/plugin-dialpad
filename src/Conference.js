@@ -420,10 +420,6 @@ export class ConferenceButton2 extends React.Component {
     const to = typeof(this.state.transferTo) === 'object' ? this.state.transferTo.value : this.state.screenMainLine;
     const from = typeof(this.state.transferTo) === 'object' ? this.props.workerName : this.props.from;
 
-    console.log(this.state.screenMainLine);
-    console.log(to);
-    console.log(typeof(this.state.transferTo));
-
     fetch(`${this.props.url}/add-conference-participant`, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
