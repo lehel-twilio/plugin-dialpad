@@ -22,12 +22,11 @@ exports.handler = function(context, event, callback) {
         {
           to: event.To,
           direction: 'outbound',
-          name: 'Shofur',
+          name: 'Your company name here',
           from: event.From,
           url: context.RUNTIME_DOMAIN,
           targetWorker: event.Worker,
           autoAnswer: 'true',
-          screenPopURL: 'https://auto.coachrail.com/',
           internal: event.Internal
         }),
       workflowSid: workflowSid,
