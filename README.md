@@ -43,16 +43,26 @@ Go to your [Twilio Assets](https://www.twilio.com/console/runtime/assets/public)
 
 ### Change log
 10/12/2018 - v1.0 - Initial release
+
 10/15/2018 - v1.1 - Added hold functionality
+
 10/18/2018 - v1.2 - Added support for international dialing
+
 10/22/2018 - v2.0 - Support for Flex 1.0
+
 10/26/2018 - v2.1 - E.164 dialing format now supported
+
 11/12/2018 - v2.2 - Significant changes on back-end, support for Flex 1.1
+
 11/16/2018 - v2.3 - Checking number length before dialing, copy and paste, bug fix that was
 allowing multiple calls to be dialed at the same time
+
 11/27/2018 - v2.4 - Added Call button for SMS, support for Flex 1.2
+
 12/19/2018 - v2.5 - Moved all outbound calls to taskChannel custom1, only auto-accepting
 interactions that have the attribute autoAnswer set to true. Support for Flex 1.3. Restyled using
 MUI buttons
+
 1/16/2019 - v2.6 - Support for Flex 1.4. Minor bug fixes in hold.
+
 3/14/2019 - v3.0 - Support for Flex 1.6. Added internal dialing and 3-way conferencing. Multiple breaking changes. Minor bug fixes. If upgrading from a previous version, please re-deploy all functions from src/functions to your Twilio console as most functions received updates.
