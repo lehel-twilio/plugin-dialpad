@@ -1,44 +1,58 @@
-# Your custom Twilio Flex Plugin
+#Dialpad
 
-Twilio Flex Plugins allow you to customize the apperance and behavior of [Twilio Flex](https://www.twilio.com/flex). If you want to learn more about the capabilities and how to use the API, check out our [Flex documentation](https://www.twilio.com/docs/flex).
+Make outbound calls using Flex!
 
-## Setup
+![Dialpad](https://zaffre-cow-9057.twil.io/assets/68747470733a2f2f63696e6572656f75732d6d616c6c6172642d343935392e7477696c2e696f2f6173736574732f6469616c7061642e706e67.png)
 
-Make sure you have [Node.js](https://nodejs.org) as well as [`npm`](https://npmjs.com) installed.
+## Instructions
 
-Afterwards install the dependencies by running `npm install`:
+### Get the Source Code
 
-```bash
-cd plugin-conference
+-   `git clone https://github.com/lehel-twilio/plugin-dialpad.git`
+-   `npm install`
+-   `make patch`
 
-# If you use npm
-npm install
-```
+### Setup Environment Variables
 
-## Development
+-   `cp public/appConfig.example.js public/appConfig.js`
 
-In order to develop locally, you can use the Webpack Dev Server by running:
+Edit public/appConfig.js and add your accountSid and runtime domain (without protocol [http/https])
 
-```bash
-npm start
-```
+### Deploy Functions
 
-This will automatically start up the Webpack Dev Server and open the browser for you. Your app will run on `http://localhost:8080`. If you want to change that you can do this by setting the `PORT` environment variable:
+Go to your [Twilio Functions](https://www.twilio.com/console/runtime/functions/manage) and deploy the functions in the /functions directory.
 
-```bash
-PORT=3000 npm start
-```
+In the [Function Configuration](https://www.twilio.com/console/runtime/functions/configure) tab you will need to make your credentials available in your Function code by checking the `Enable ACCOUNT_SID and AUTH_TOKEN` option. Additionally, you will need two configure two environment variables:
 
-When you make changes to your code, the browser window will be automatically refreshed.
+`TWILIO_WORKSPACE_SID` Out of the box, `Flex Task Assignment` is the only available Workspace
+`TWILIO_WORKFLOW_SID` Out of the box, `Assign to Anyone` is the only available Workflow
+`RUNTIME_DOMAIN` this is the name of your Twilio domain, for example `https://zaffre-cow-9057.twil.io`. Must include https://
 
-## Deploy
+In the Task Router -> Task Channels, please verify that channel `custom1` exists. If not, please create one using the REST API. Instructions can be found [here](https://www.twilio.com/docs/taskrouter/api/task-channel?code-sample=code-create-a-taskchannel&code-language=curl#create-a-taskchannel)
 
-Once you are happy with your plugin, you have to bundle it, in order to deply it to Twilio Flex.
+**function paths should match file names**
 
-Run the following command to start the bundling:
+### Build
 
-```bash
-npm run build
-```
+-   `npm run build`
 
-Afterwards, you'll find in your project a `build/` folder that contains a file with the name of your plugin project. For example `plugin-example.js`. Take this file and upload it into the Assets part of your Twilio Runtime.
+### Deploy Plugin
+
+Go to your [Twilio Assets](https://www.twilio.com/console/runtime/assets/public) and deploy the plugin-dialpad.js file from the /build directory.
+
+
+### Change log
+10/12/2018 - v1.0 - Initial release
+10/15/2018 - v1.1 - Added hold functionality
+10/18/2018 - v1.2 - Added support for international dialing
+10/22/2018 - v2.0 - Support for Flex 1.0
+10/26/2018 - v2.1 - E.164 dialing format now supported
+11/12/2018 - v2.2 - Significant changes on back-end, support for Flex 1.1
+11/16/2018 - v2.3 - Checking number length before dialing, copy and paste, bug fix that was
+allowing multiple calls to be dialed at the same time
+11/27/2018 - v2.4 - Added Call button for SMS, support for Flex 1.2
+12/19/2018 - v2.5 - Moved all outbound calls to taskChannel custom1, only auto-accepting
+interactions that have the attribute autoAnswer set to true. Support for Flex 1.3. Restyled using
+MUI buttons
+1/16/2019 - v2.6 - Support for Flex 1.4. Minor bug fixes in hold.
+3/14/2019 - v3.0 - Support for Flex 1.6. Added internal dialing and 3-way conferencing. Multiple breaking changes. Minor bug fixes. If upgrading from a previous version, please re-deploy all functions from src/functions to your Twilio console as most functions received updates.

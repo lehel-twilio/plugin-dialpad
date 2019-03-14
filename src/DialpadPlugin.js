@@ -7,7 +7,7 @@ import './CustomActions';
 import ConferenceButton from './Conference';
 
 export default class ConferencePlugin extends FlexPlugin {
-  name = 'ConferencePlugin';
+  name = 'DialpadPlugin';
 
   init(flex, manager) {
     //adds the dial button to the navbar
@@ -33,8 +33,8 @@ export default class ConferencePlugin extends FlexPlugin {
     });
 
     //adds the dialer view
-    flex.ViewCollection.Content.add(<flex.View name='dialer' key='dialpad1'><DialPad key='dialpad2'/></flex.View>);
-    flex.CallCanvas.Content.add(<ConferenceButton key='conference' insightsClient={manager.insightsClient}/>);
+    flex.ViewCollection.Content.add(<flex.View name='dialer' key='dialpad1'><DialPad key='dialpad2' insightsClient={manager.insightsClient} /></flex.View>);
+    flex.CallCanvas.Content.add(<ConferenceButton key='conference' insightsClient={manager.insightsClient} />);
 
     //adds the dial button to SMS
     flex.TaskCanvasHeader.Content.add(<CallButton key='callbutton'/>);

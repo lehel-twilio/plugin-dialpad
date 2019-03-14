@@ -1,13 +1,13 @@
 [
   {
-    "name": "ConferencePlugin",
-    "version": "0.0.0",
-    "class": "ConferencePlugin",
+    "name": "DialpadPlugin",
+    "version": "3.0.0",
+    "class": "DialpadPlugin",
     "requires": [
       {
-        "@twilio/flex-ui": "^1.0.0"
+        "@twilio/flex-ui": "^1.5.0"
       }
     ],
-    "src": "http://localhost:8080/plugin-conference.js"
+    "src": "http://localhost:8080/plugin-dialpad.js"
   }
 ]

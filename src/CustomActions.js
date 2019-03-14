@@ -5,7 +5,6 @@ Actions.replaceAction('AcceptTask', (payload, original) => {
     const reservation = payload.task.sourceObject;
 
     if (payload.task.taskChannelUniqueName === 'custom1' && payload.task.attributes.direction === 'outbound') {
-
       //Join existing conference as 3rd particpant
       if (typeof(reservation.task.attributes.conferenceSid) !== 'undefined') {
         reservation.call(reservation.task.attributes.from,
@@ -23,6 +22,36 @@ Actions.replaceAction('AcceptTask', (payload, original) => {
 
     } else {
       original(payload)
+    }
+    resolve();
+  })
+})
+
+Actions.replaceAction('RejectTask', (payload, original) => {
+  return new Promise((resolve, reject) => {
+
+    if (payload.task.attributes.internal === 'true') {
+      payload.task._reservation.accept();
+      payload.task.wrapUp();
+      payload.task.complete();
+
+      const taskSid = payload.task.attributes.conferenceSid;
+      //cleanup the outgoing call
+      fetch(`${payload.task.attributes.url}/cleanup-rejected-task`, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        method: 'POST',
+        body: `taskSid=${taskSid}`
+      })
+      .then(response => {
+        console.log('Outbound call has been placed into wrapping');
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    } else {
+      original(payload);
     }
     resolve();
   })
@@ -65,17 +94,6 @@ Actions.replaceAction('UnholdCall', (payload, original) => {
         original(payload);
       }
     }
-    resolve();
-  })
-})
-
-Actions.replaceAction('HangupCall', (payload, original) => {
-  return new Promise((resolve, reject) => {
-
-    const task = payload.task;
-
-    original(payload);
-    task.wrapUp();
     resolve();
   })
 })

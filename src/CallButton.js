@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 import { connect } from 'react-redux';
 import { Actions } from '@twilio/flex-ui';
 import { css } from 'react-emotion';
@@ -42,11 +42,11 @@ export class CallButton extends React.Component {
             })
             .then(response => response.json())
             .then(json => {
-              Actions.invokeAction("NavigateToView", {viewName: "agent-desktop"});
-              Actions.invokeAction("SelectTask", {taskSid: json});
+              Actions.invokeAction('NavigateToView', {viewName: 'agent-desktop'});
+              Actions.invokeAction('SelectTask', {taskSid: json});
             })
           } else {
-            console.log("Invalid number dialed");
+            console.log('Invalid number dialed');
           }
         }}/>
       )
@@ -65,8 +65,9 @@ const mapStateToProps = state => {
       : ('https://' + (state.flex.config.serviceBaseUrl.slice(-1) === '/' ? state.flex.config.serviceBaseUrl.substring(0, state.flex.config.serviceBaseUrl.length - 1) : state.flex.config.serviceBaseUrl)),
     from: state.flex.worker.attributes.phone,
     workerContactUri: state.flex.worker.attributes.contact_uri,
-    activeCall: state.flex.phone.connections,
-    isMuted: state.flex.phone.connections.length > 0 ? state.flex.phone.connections[0].source.mediaStream.isMuted : false,
+    activeCall: typeof(state.flex.phone.connection) === 'undefined' ? '' : state.flex.phone.connection.source,
+    isMuted: typeof(state.flex.phone.connection) === 'undefined' ? false : state.flex.phone.connection.source.mediaStream.isMuted,
+//    isMuted: state.flex.phone.connections.length > 0 ? state.flex.phone.connections[0].source.mediaStream.isMuted : false,
     activeView: state.flex.view.activeView
   }
 }

@@ -1,8 +1,8 @@
 [
   {
-    "name": "ConferencePlugin",
+    "name": "DialpadPlugin",
     "version": "0.0.0",
-    "class": "ConferencePlugin",
+    "class": "DialpadPlugin",
     "requires": [
       {
         "@twilio/flex-ui": "^1.0.0"

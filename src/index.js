@@ -1,4 +1,4 @@
 import * as FlexPlugin from 'flex-plugin';
-import ConferencePlugin from './ConferencePlugin';
+import DialpadPlugin from './DialpadPlugin';
 
-FlexPlugin.loadPlugin(ConferencePlugin);
+FlexPlugin.loadPlugin(DialpadPlugin);
