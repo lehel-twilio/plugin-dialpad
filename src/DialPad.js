@@ -472,6 +472,18 @@ export class DialPad extends React.Component {
   )}
 }
 
+const getUrl = (serviceBaseUrl) => {
+  let url = serviceBaseUrl;
+
+  if(url.slice(0,5) !== 'https') {
+    url = "https://" + url;
+  }
+
+  return url.slice(-1) === '/'
+    ? url.substring(0, url.length - 1)
+    : url;
+}
+
 DialPad.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
@@ -479,9 +491,7 @@ DialPad.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    url: state.flex.config.serviceBaseUrl.slice(0,5) === 'https'
-      ? (state.flex.config.serviceBaseUrl.slice(-1) === '/' ? state.flex.config.serviceBaseUrl.substring(0, state.flex.config.serviceBaseUrl.length - 1) : state.flex.config.serviceBaseUrl)
-      : ('https://' + (state.flex.config.serviceBaseUrl.slice(-1) === '/' ? state.flex.config.serviceBaseUrl.substring(0, state.flex.config.serviceBaseUrl.length - 1) : state.flex.config.serviceBaseUrl)),
+    url: getUrl(state.flex.config.serviceBaseUrl),
     from: state.flex.worker.attributes.phone,
     workerContactUri: state.flex.worker.attributes.contact_uri,
     activeCall: typeof(state.flex.phone.connection) === 'undefined' ? '' : state.flex.phone.connection.source,
