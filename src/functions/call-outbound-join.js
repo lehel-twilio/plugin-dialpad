@@ -98,9 +98,9 @@ exports.handler = function(context, event, callback) {
                 return;
             } else {
 
-                console.log(`call triggered, callSid ${participant.callSid}`);
+                console.log(`call triggered, callSid ${result.callSid}`);
 
-                attributes.conference.participants.customer = participant.callSid;
+                attributes.conference.participants.customer = result.callSid;
 
                 return updateTaskAttributes(client, context, taskSid, attributes);
 
