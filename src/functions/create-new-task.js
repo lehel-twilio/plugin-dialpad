@@ -30,8 +30,8 @@ exports.handler = function(context, event, callback) {
           internal: event.Internal
         }),
       workflowSid: workflowSid,
-      taskChannel: 'custom1'
-
+      taskChannel: 'custom1',
+      timeout: 30
     })
   .then(task => {
     response.setBody( task.sid );

@@ -315,7 +315,7 @@ export class DialPad extends React.Component {
 
     if (number.length > 0) {
 
-      fetch(`${url}/create-new-task`, {
+      fetch(`https://${url}/create-new-task`, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         },
@@ -479,9 +479,6 @@ DialPad.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    url: state.flex.config.serviceBaseUrl.slice(0,5) === 'https'
-      ? (state.flex.config.serviceBaseUrl.slice(-1) === '/' ? state.flex.config.serviceBaseUrl.substring(0, state.flex.config.serviceBaseUrl.length - 1) : state.flex.config.serviceBaseUrl)
-      : ('https://' + (state.flex.config.serviceBaseUrl.slice(-1) === '/' ? state.flex.config.serviceBaseUrl.substring(0, state.flex.config.serviceBaseUrl.length - 1) : state.flex.config.serviceBaseUrl)),
     from: state.flex.worker.attributes.phone,
     workerContactUri: state.flex.worker.attributes.contact_uri,
     activeCall: typeof(state.flex.phone.connection) === 'undefined' ? '' : state.flex.phone.connection.source,

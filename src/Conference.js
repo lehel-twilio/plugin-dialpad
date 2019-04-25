@@ -420,12 +420,12 @@ export class ConferenceButton2 extends React.Component {
     const to = typeof(this.state.transferTo) === 'object' ? this.state.transferTo.value : this.state.screenMainLine;
     const from = typeof(this.state.transferTo) === 'object' ? this.props.workerName : this.props.from;
 
-    fetch(`${this.props.url}/add-conference-participant`, {
+    fetch(`https://${this.props.url}/add-conference-participant`, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       method: 'POST',
-      body: `taskSid=${this.props.task.taskSid}&from=${from}&to=${to}&url=${this.props.url}`
+      body: `taskSid=${this.props.task.taskSid}&from=${from}&to=${to}`
     })
     .then(response => response.json())
     .then(json => {
@@ -463,9 +463,6 @@ const ConferenceButton = withTaskContext(ConferenceButton2);
 
 const mapStateToProps = state => {
   return {
-    url: state.flex.config.serviceBaseUrl.slice(0,5) === 'https'
-      ? (state.flex.config.serviceBaseUrl.slice(-1) === '/' ? state.flex.config.serviceBaseUrl.substring(0, state.flex.config.serviceBaseUrl.length - 1) : state.flex.config.serviceBaseUrl)
-      : ('https://' + (state.flex.config.serviceBaseUrl.slice(-1) === '/' ? state.flex.config.serviceBaseUrl.substring(0, state.flex.config.serviceBaseUrl.length - 1) : state.flex.config.serviceBaseUrl)),
     from: state.flex.worker.attributes.phone,
     activeCall: state.flex.phone.connections,
     workerName: state.flex.worker.attributes.full_name,

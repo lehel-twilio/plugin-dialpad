@@ -6,7 +6,7 @@ import CallButton from './CallButton';
 import './CustomActions';
 import ConferenceButton from './Conference';
 
-export default class ConferencePlugin extends FlexPlugin {
+export default class DialpadPlugin extends FlexPlugin {
   name = 'DialpadPlugin';
 
   init(flex, manager) {
@@ -33,8 +33,8 @@ export default class ConferencePlugin extends FlexPlugin {
     });
 
     //adds the dialer view
-    flex.ViewCollection.Content.add(<flex.View name='dialer' key='dialpad1'><DialPad key='dialpad2' insightsClient={manager.insightsClient} /></flex.View>);
-    flex.CallCanvas.Content.add(<ConferenceButton key='conference' insightsClient={manager.insightsClient} />);
+    flex.ViewCollection.Content.add(<flex.View name='dialer' key='dialpad1'><DialPad key='dialpad2' insightsClient={manager.insightsClient} url={manager.serviceConfiguration.runtime_domain}/></flex.View>);
+    flex.CallCanvas.Content.add(<ConferenceButton key='conference' insightsClient={manager.insightsClient} url={manager.serviceConfiguration.runtime_domain} />);
 
     //adds the dial button to SMS
     flex.TaskCanvasHeader.Content.add(<CallButton key='callbutton'/>);
