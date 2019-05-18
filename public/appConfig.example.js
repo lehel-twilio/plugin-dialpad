@@ -1,8 +1,5 @@
 // your account sid
-var accountSid = 'accountSid';
-
-// your runtime domain
-var serviceBaseUrl = 'runtimeUrl';
+var accountSid = '';
 
 // set to /plugins.json for local dev
 // set to /plugins.local.build.json for testing your build
@@ -10,14 +7,12 @@ var serviceBaseUrl = 'runtimeUrl';
 var pluginServiceUrl = '/plugins.json';
 
 var appConfig = {
-  serviceBaseUrl: serviceBaseUrl + '/',
   pluginService: {
     enabled: true,
     url: pluginServiceUrl,
   },
   sso: {
-    accountSid: accountSid,
-    tokenizerUrl: serviceBaseUrl + '/tokenizer',
+    accountSid: accountSid
   },
   ytica: false,
   logLevel: 'debug',

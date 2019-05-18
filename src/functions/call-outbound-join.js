@@ -1,3 +1,10 @@
+/* create a Twilio Function from this file 
+
+name: Flex Dialpad Call Outbound Join
+path /call-outbound-join
+
+*/
+
 const fetchTask = (client, context, taskSid) => {
   return client.taskrouter.workspaces(context.TWILIO_WORKSPACE_SID)
     .tasks(taskSid)
@@ -28,7 +35,6 @@ const addParticipantToConference = (client, context, conferenceSid, taskSid, to,
               name: from,
               from: 'Enter a Twilio Number here',
               targetWorker: to,
-              url: context.RUNTIME_DOMAIN,
               autoAnswer: 'false',
               conferenceSid: taskSid,
               internal: 'true'

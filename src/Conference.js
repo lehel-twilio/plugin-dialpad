@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
-import { css } from 'react-emotion';
+import { css } from 'emotion'
 import { withTaskContext } from '@twilio/flex-ui';
 import { connect } from 'react-redux';
 

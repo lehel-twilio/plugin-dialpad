@@ -4,7 +4,7 @@ import Select from 'react-select';
 
 import { connect } from 'react-redux';
 import { Actions } from '@twilio/flex-ui';
-import { css } from 'react-emotion';
+import { css } from 'emotion'
 
 import { withStyles } from '@material-ui/core/styles';
 import { emphasize } from '@material-ui/core/styles/colorManipulator';
@@ -253,9 +253,9 @@ export class DialPad extends React.Component {
       //Populate a list of workers in TaskRouter to be used in the Search Box
       const query = '';
       this.props.insightsClient.instantQuery('tr-worker')
-        .then((q: InstantQuery) => {
+        .then((q) => {
           this.workersSearch = q;
-          q.on('searchResult', (items: any) => {
+          q.on('searchResult', (items) => {
             this.setState({ workerList: items });
           });
           q.search(query);
@@ -285,7 +285,7 @@ export class DialPad extends React.Component {
       const number = (typeof this.state.plus === 'undefined') ? this.state.screenMainLine : `+${this.state.screenMainLine}`;
       this.setState({screenMainLine: ''});
       if (number !== '') {
-        this.dial(number, this.props.url, this.props.from, this.props.workerContactUri);
+        this.dial(number, this.props.from, this.props.workerContactUri);
       };
     }
   }
@@ -306,8 +306,7 @@ export class DialPad extends React.Component {
     this.setState({screenMainLine: this.state.screenMainLine.substring(0, this.state.screenMainLine.length - 1)});
   }
 
-  dial(number, url, from, workerContactUri) {
-
+  dial(number, from, workerContactUri) {
     //If Worker is selected, add worker to conference, otherwise add number from screenMainLine
     number = typeof(this.state.transferTo) === 'object' ? this.state.transferTo.value : number;
     from = typeof(this.state.transferTo) === 'object' ? this.props.workerName : from;
@@ -315,7 +314,7 @@ export class DialPad extends React.Component {
 
     if (number.length > 0) {
 
-      fetch(`https://${url}/create-new-task`, {
+      fetch(`https://${this.props.runtimeDomain}/create-new-task`, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         },
@@ -377,7 +376,7 @@ export class DialPad extends React.Component {
         <Phone className={dialButton} onClick={e => {
           const number = (typeof this.state.plus === 'undefined') ? this.state.screenMainLine : `+${this.state.screenMainLine}`;
           this.setState({screenMainLine: ''});
-          this.dial(number, this.props.url, this.props.from, this.props.workerContactUri);
+          this.dial(number, this.props.from, this.props.workerContactUri);
         }} />
       </div>);
     }
@@ -477,8 +476,9 @@ DialPad.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
   return {
+    runtimeDomain: ownProps.runtimeDomain,
     from: state.flex.worker.attributes.phone,
     workerContactUri: state.flex.worker.attributes.contact_uri,
     activeCall: typeof(state.flex.phone.connection) === 'undefined' ? '' : state.flex.phone.connection.source,

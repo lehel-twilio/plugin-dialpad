@@ -1,3 +1,10 @@
+/* create a Twilio Function from this file 
+
+name: Flex Dialpad Add Conference Participant
+path /add-conference-participant
+
+*/
+
 exports.handler = function(context, event, callback) {
 	const client = context.getTwilioClient();
     const workspace = context.TWILIO_WORKSPACE_SID;
@@ -25,7 +32,6 @@ exports.handler = function(context, event, callback) {
                   name: 'Your company name here',
                   from: 'Your Twilio Number',
                   targetWorker: event.to,
-                  url: context.RUNTIME_DOMAIN,
                   autoAnswer: 'false',
                   conferenceSid: event.taskSid
                 }),
