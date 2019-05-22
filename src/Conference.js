@@ -461,7 +461,7 @@ ConferenceButton2.propTypes = {
 
 const ConferenceButton = withTaskContext(ConferenceButton2);
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
   return {
     runtimeDomain: ownProps.runtimeDomain,
     from: state.flex.worker.attributes.phone,
