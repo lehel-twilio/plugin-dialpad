@@ -420,7 +420,7 @@ export class ConferenceButton2 extends React.Component {
     const to = typeof(this.state.transferTo) === 'object' ? this.state.transferTo.value : this.state.screenMainLine;
     const from = typeof(this.state.transferTo) === 'object' ? this.props.workerName : this.props.from;
 
-    fetch(`https://${this.props.url}/add-conference-participant`, {
+    fetch(`https://${this.props.runtimeDomain}/add-conference-participant`, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
@@ -463,6 +463,7 @@ const ConferenceButton = withTaskContext(ConferenceButton2);
 
 const mapStateToProps = state => {
   return {
+    runtimeDomain: ownProps.runtimeDomain,
     from: state.flex.worker.attributes.phone,
     activeCall: state.flex.phone.connections,
     workerName: state.flex.worker.attributes.full_name,
