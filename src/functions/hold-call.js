@@ -1,3 +1,12 @@
+/* create a Twilio Function from this file 
+
+name: Flex Dialpad Hold Call
+path /hold-call
+
+Remove the checkmark from Check for valid Twilio signature
+
+*/
+
 exports.handler = function(context, event, callback) {
   console.log(event);
 

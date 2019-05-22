@@ -19,7 +19,8 @@
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-scripts": "1.1.5",
-    "react-select": "^2.4.1"
+    "react-select": "^2.4.1",
+    "@emotion/core": "^10.0.10"
   },
   "config-overrides-path": "node_modules/react-app-rewire-flex-plugin"
 }

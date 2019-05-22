@@ -1,7 +1,15 @@
+/* create a Twilio Function from this file 
+
+name: Flex Dialpad Cleanup Rejected Task
+path /cleanup-rejected-task
+
+Remove the checkmark from Check for valid Twilio signature
+
+*/
+
 exports.handler = function(context, event, callback) {
 
     const workspace = context.TWILIO_WORKSPACE_SID;
-    const workflowSid = context.TWILIO_WORKFLOW_SID;
     const taskSid = event.taskSid;
 
     let client = context.getTwilioClient();

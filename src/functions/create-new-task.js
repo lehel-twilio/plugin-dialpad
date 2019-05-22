@@ -1,3 +1,12 @@
+/* create a Twilio Function from this file 
+
+name: Flex Dialpad Create New Task
+path /create-new-task
+
+Remove the checkmark from Check for valid Twilio signature
+
+*/
+
 exports.handler = function(context, event, callback) {
 
   const workspace = context.TWILIO_WORKSPACE_SID;
@@ -24,7 +33,6 @@ exports.handler = function(context, event, callback) {
           direction: 'outbound',
           name: 'Your company name here',
           from: event.From,
-          url: context.RUNTIME_DOMAIN,
           targetWorker: event.Worker,
           autoAnswer: 'true',
           internal: event.Internal

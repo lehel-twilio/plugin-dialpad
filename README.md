@@ -16,7 +16,7 @@ Make outbound calls using Flex!
 
 -   `cp public/appConfig.example.js public/appConfig.js`
 
-Edit public/appConfig.js and add your accountSid and runtime domain (without protocol [http/https])
+Edit public/appConfig.js and add your accountSid.
 
 ### Deploy Functions
 
@@ -24,11 +24,12 @@ Go to your [Twilio Functions](https://www.twilio.com/console/runtime/functions/m
 
 In the [Function Configuration](https://www.twilio.com/console/runtime/functions/configure) tab you will need to make your credentials available in your Function code by checking the `Enable ACCOUNT_SID and AUTH_TOKEN` option. Additionally, you will need two configure two environment variables:
 
-`TWILIO_WORKSPACE_SID` Out of the box, `Flex Task Assignment` is the only available Workspace
-`TWILIO_WORKFLOW_SID` Out of the box, `Assign to Anyone` is the only available Workflow
-`RUNTIME_DOMAIN` this is the name of your Twilio domain, for example `https://zaffre-cow-9057.twil.io`. Must include https://
+`TWILIO_WORKSPACE_SID` Out of the box, `Flex Task Assignment` is the only available Workspace  
+`TWILIO_WORKFLOW_SID` Out of the box, `Assign to Anyone` is the only available Workflow.
 
-In the Task Router -> Task Channels, please verify that channel `custom1` exists. If not, please create one using the REST API. Instructions can be found [here](https://www.twilio.com/docs/taskrouter/api/task-channel?code-sample=code-create-a-taskchannel&code-language=curl#create-a-taskchannel)
+In the TaskRouter -> Task Channels, please verify that channel `custom1` exists. If not, please create one using the REST API or via Twilio Console. Instructions can be found [here](https://www.twilio.com/docs/taskrouter/api/task-channel?code-sample=code-create-a-taskchannel&code-language=curl#create-a-taskchannel)
+
+The plugin uses the worker attribute `phone` as the callerId to make outbound calls.
 
 **function paths should match file names**
 

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Actions } from '@twilio/flex-ui';
-import { css } from 'react-emotion';
+import { css } from 'emotion'
 
 import Call from '@material-ui/icons/Call';
 
@@ -24,21 +24,22 @@ export class CallButton extends React.Component {
     if (this.props.task.channelType !== 'sms') { //Only render the call button for SMS
       return <div/>;
     } else {
+
       return (
         <Call {...this.props} className={callbutton} onClick={e => {
           const number = this.props.task.defaultFrom;
-          const url = this.props.url;
           const workerContactUri = this.props.workerContactUri;
+          const runtimeDomain = this.props.runtimeDomain;
           const from = this.props.from;
 
           if (number.length > 0) {
 
-            fetch(`${url}/create-new-task`, {
+            fetch(`https://${runtimeDomain}/create-new-task`, {
               headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
               },
               method: 'POST',
-              body: `From=${from}&To=${number}&Worker=${workerContactUri}&Url=${url}`
+              body: `From=${from}&To=${number}&Worker=${workerContactUri}`
             })
             .then(response => response.json())
             .then(json => {
@@ -58,11 +59,9 @@ export class CallButton extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
   return {
-    url: state.flex.config.serviceBaseUrl.slice(0,5) === 'https'
-      ? (state.flex.config.serviceBaseUrl.slice(-1) === '/' ? state.flex.config.serviceBaseUrl.substring(0, state.flex.config.serviceBaseUrl.length - 1) : state.flex.config.serviceBaseUrl)
-      : ('https://' + (state.flex.config.serviceBaseUrl.slice(-1) === '/' ? state.flex.config.serviceBaseUrl.substring(0, state.flex.config.serviceBaseUrl.length - 1) : state.flex.config.serviceBaseUrl)),
+    runtimeDomain: ownProps.runtimeDomain,
     from: state.flex.worker.attributes.phone,
     workerContactUri: state.flex.worker.attributes.contact_uri,
     activeCall: typeof(state.flex.phone.connection) === 'undefined' ? '' : state.flex.phone.connection.source,

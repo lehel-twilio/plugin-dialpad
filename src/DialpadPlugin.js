@@ -3,8 +3,8 @@ import React from 'react';
 import DialPad from './DialPad';
 import DialerButton from './DialerButton';
 import CallButton from './CallButton';
-import './CustomActions';
 import ConferenceButton from './Conference';
+import registerCustomActions from './CustomActions'
 
 export default class DialpadPlugin extends FlexPlugin {
   name = 'DialpadPlugin';
@@ -33,15 +33,17 @@ export default class DialpadPlugin extends FlexPlugin {
     });
 
     //adds the dialer view
-    flex.ViewCollection.Content.add(<flex.View name='dialer' key='dialpad1'><DialPad key='dialpad2' insightsClient={manager.insightsClient} url={manager.serviceConfiguration.runtime_domain}/></flex.View>);
-    flex.CallCanvas.Content.add(<ConferenceButton key='conference' insightsClient={manager.insightsClient} url={manager.serviceConfiguration.runtime_domain} />);
+    flex.ViewCollection.Content.add(<flex.View name='dialer' key='dialpad1'><DialPad key='dialpad2' insightsClient={manager.insightsClient} runtimeDomain={manager.serviceConfiguration.runtime_domain}/></flex.View>);
+    flex.CallCanvas.Content.add(<ConferenceButton key='conference' insightsClient={manager.insightsClient} runtimeDomain={manager.serviceConfiguration.runtime_domain} />);
 
     //adds the dial button to SMS
-    flex.TaskCanvasHeader.Content.add(<CallButton key='callbutton'/>);
+    flex.TaskCanvasHeader.Content.add(<CallButton runtimeDomain={manager.serviceConfiguration.runtime_domain} key='callbutton'/>);
 
     //create custom task TaskChannel
     const outboundVoiceChannel = flex.DefaultTaskChannels.createCallTaskChannel('custom1',
       (task) => task.taskChannelUniqueName === 'custom1');
     flex.TaskChannels.register(outboundVoiceChannel);
+
+    registerCustomActions(manager.serviceConfiguration.runtime_domain)
   }
 }
