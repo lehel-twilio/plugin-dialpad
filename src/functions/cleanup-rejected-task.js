@@ -1,4 +1,4 @@
-/* create a Twilio Function from this file 
+/* create a Twilio Function from this file
 
 name: Flex Dialpad Cleanup Rejected Task
 path /cleanup-rejected-task
@@ -7,9 +7,12 @@ Remove the checkmark from Check for valid Twilio signature
 
 */
 
-exports.handler = function(context, event, callback) {
+const axios = require('axios');
+
+exports.handler = async function(context, event, callback) {
 
     const workspace = context.TWILIO_WORKSPACE_SID;
+    const workflowSid = context.TWILIO_WORKFLOW_SID;
     const taskSid = event.taskSid;
 
     let client = context.getTwilioClient();
@@ -20,9 +23,13 @@ exports.handler = function(context, event, callback) {
     response.appendHeader('Content-Type', 'application/json');
     response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-    console.log(event);
-    console.log(workspace);
-    console.log(taskSid);
+    const authed = await validateToken(event.Token, context.ACCOUNT_SID, context.AUTH_TOKEN);
+    if (typeof authed !== 'object' || !authed.data || authed.data.valid !== true) {
+      console.log('couldn\'t auth', event.Token);
+      return callback(null, response);
+    }
+
+    console.log('successfully authed', authed.data)
 
 	client.taskrouter
       .workspaces(workspace)
@@ -61,3 +68,16 @@ exports.handler = function(context, event, callback) {
           callback(error);
       });
 };
+
+async function validateToken(token, accountSid, authToken) {
+  try {
+    return await axios.post(
+      `https://iam.twilio.com/v1/Accounts/${accountSid}/Tokens/validate`,
+      { token: token },
+      { auth: { username: accountSid, password: authToken } }
+    )
+  } catch (e) {
+    console.error('failed to validate token', e.response.data);
+    throw e;
+  }
+}

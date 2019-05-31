@@ -20,6 +20,9 @@ import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 
 const styles = theme => ({
+  button: {
+    margin: '20px'
+  },
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
@@ -425,7 +428,7 @@ export class ConferenceButton2 extends React.Component {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       method: 'POST',
-      body: `taskSid=${this.props.task.taskSid}&from=${from}&to=${to}`
+      body: `taskSid=${this.props.task.taskSid}&from=${from}&to=${to}&Token=${this.props.jweToken}`
     })
     .then(response => response.json())
     .then(json => {

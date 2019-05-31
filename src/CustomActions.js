@@ -1,11 +1,11 @@
 import { Actions } from '@twilio/flex-ui';
 
-export default function (runtimeDomain) {
+export default function (runtimeDomain, jweToken) {
 
   Actions.replaceAction('AcceptTask', (payload, original) => {
     return new Promise((resolve, reject) => {
       const reservation = payload.task.sourceObject;
-  
+
       if (payload.task.taskChannelUniqueName === 'custom1' && payload.task.attributes.direction === 'outbound') {
         //Join existing conference as 3rd particpant
         if (typeof(reservation.task.attributes.conferenceSid) !== 'undefined') {
@@ -21,22 +21,22 @@ export default function (runtimeDomain) {
             }
           )
         }
-  
+
       } else {
         original(payload)
       }
       resolve();
     })
   })
-  
+
   Actions.replaceAction('RejectTask', (payload, original) => {
     return new Promise((resolve, reject) => {
-  
+
       if (payload.task.attributes.internal === 'true') {
         payload.task._reservation.accept();
         payload.task.wrapUp();
         payload.task.complete();
-  
+
         const taskSid = payload.task.attributes.conferenceSid;
         //cleanup the outgoing call
         fetch(`https://${runtimeDomain}/cleanup-rejected-task`, {
@@ -44,7 +44,7 @@ export default function (runtimeDomain) {
             'Content-Type': 'application/x-www-form-urlencoded'
           },
           method: 'POST',
-          body: `taskSid=${taskSid}`
+          body: `taskSid=${taskSid}&Token=${jweToken}`
         })
         .then(response => {
           console.log('Outbound call has been placed into wrapping');
@@ -58,16 +58,16 @@ export default function (runtimeDomain) {
       resolve();
     })
   })
-  
+
   Actions.replaceAction('HoldCall', (payload, original) => {
     return new Promise((resolve, reject) => {
-  
+
       const task = payload.task;
       const reservation = payload.task.sourceObject;
       const conference = task.attributes.conference.sid;
       const participant = task.attributes.conference.participants.customer;
       const hold = true;
-  
+
       if (task.taskChannelUniqueName === 'custom1' && reservation.task.attributes.direction === 'outbound') {
         toggleHold(conference, participant, hold, original, payload, reservation);
       } else {
@@ -76,20 +76,20 @@ export default function (runtimeDomain) {
       resolve();
     })
   })
-  
+
   Actions.replaceAction('UnholdCall', (payload, original) => {
     return new Promise((resolve, reject) => {
-  
+
       const task = payload.task;
       if (typeof(task.attributes.conference) === 'undefined') {
         original(payload)
       } else {
-  
+
         const reservation = payload.task.sourceObject;
         const conference = task.attributes.conference.sid;
         const participant = task.attributes.conference.participants.customer;
         const hold = false;
-  
+
         if (task.taskChannelUniqueName === 'custom1' && reservation.task.attributes.direction === 'outbound') {
           toggleHold(conference, participant, hold, original, payload, reservation);
         } else {
@@ -107,7 +107,7 @@ export default function (runtimeDomain) {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       method: 'POST',
-      body: `conference=${conference}&participant=${participant}&hold=${hold}`
+      body: `conference=${conference}&participant=${participant}&hold=${hold}&Token=${jweToken}`
     })
     .then(response => {
       original(payload);
@@ -116,7 +116,5 @@ export default function (runtimeDomain) {
       console.log(error);
     });
   }
-  
+
 }
-
-

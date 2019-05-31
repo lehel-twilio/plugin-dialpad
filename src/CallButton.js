@@ -39,7 +39,7 @@ export class CallButton extends React.Component {
                 'Content-Type': 'application/x-www-form-urlencoded'
               },
               method: 'POST',
-              body: `From=${from}&To=${number}&Worker=${workerContactUri}`
+              body: `From=${from}&To=${number}&Worker=${workerContactUri}&Token=${this.props.jweToken}`
             })
             .then(response => response.json())
             .then(json => {
@@ -66,7 +66,6 @@ const mapStateToProps = (state, ownProps) => {
     workerContactUri: state.flex.worker.attributes.contact_uri,
     activeCall: typeof(state.flex.phone.connection) === 'undefined' ? '' : state.flex.phone.connection.source,
     isMuted: typeof(state.flex.phone.connection) === 'undefined' ? false : state.flex.phone.connection.source.mediaStream.isMuted,
-//    isMuted: state.flex.phone.connections.length > 0 ? state.flex.phone.connections[0].source.mediaStream.isMuted : false,
     activeView: state.flex.view.activeView
   }
 }

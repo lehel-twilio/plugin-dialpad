@@ -1,11 +1,13 @@
-/* create a Twilio Function from this file 
+/* create a Twilio Function from this file
 
 name: Flex Dialpad Add Conference Participant
 path /add-conference-participant
 
 */
 
-exports.handler = function(context, event, callback) {
+const axios = require('axios');
+
+exports.handler = async function(context, event, callback) {
 	const client = context.getTwilioClient();
     const workspace = context.TWILIO_WORKSPACE_SID;
     const workflowSid = context.TWILIO_WORKFLOW_SID;
@@ -15,6 +17,14 @@ exports.handler = function(context, event, callback) {
     response.appendHeader('Access-Control-Allow-Methods', 'OPTIONS POST');
     response.appendHeader('Content-Type', 'application/json');
     response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    const authed = await validateToken(event.Token, context.ACCOUNT_SID, context.AUTH_TOKEN);
+    if (typeof authed !== 'object' || !authed.data || authed.data.valid !== true) {
+      console.log('couldn\'t auth', event.Token);
+      return callback(null, response);
+    }
+
+    console.log('successfully authed', authed.data)
 
     Object.keys(event).forEach( thisEvent => console.log(`${thisEvent}: ${event[thisEvent]}`));
 
@@ -32,6 +42,7 @@ exports.handler = function(context, event, callback) {
                   name: 'Your company name here',
                   from: 'Your Twilio Number',
                   targetWorker: event.to,
+                  url: context.RUNTIME_DOMAIN,
                   autoAnswer: 'false',
                   conferenceSid: event.taskSid
                 }),
@@ -64,3 +75,16 @@ exports.handler = function(context, event, callback) {
             });
     }
 };
+
+async function validateToken(token, accountSid, authToken) {
+  try {
+    return await axios.post(
+      `https://iam.twilio.com/v1/Accounts/${accountSid}/Tokens/validate`,
+      { token: token },
+      { auth: { username: accountSid, password: authToken } }
+    )
+  } catch (e) {
+    console.error('failed to validate token', e.response.data);
+    throw e;
+  }
+}

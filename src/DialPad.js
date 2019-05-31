@@ -22,6 +22,9 @@ import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 
 const styles = theme => ({
+  button: {
+    margin: '20px'
+  },
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
@@ -88,12 +91,19 @@ const numpadContainer = css`
   align-self: center;
 `
 
+const functionButtons = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
 const screen = css`
   width: 100%;
   height: 10%;
   background-color: white;
   color: #9E9E9E;
   font-weight: 100;
+  padding: 10px;
 `
 
 const buttonRow = css`
@@ -122,24 +132,6 @@ const screenWrapper = css`
   justify-content: flex-end;
   padding-left: 20px;
 `
-
-const iconButtons = css`
-  display: contents !important;
-`
-
-const functionButtons = css`
-  margin: 20px;
-`
-
-const volumeButton = css`
-  margin: 20px;
-`
-
-const hangupButton = css`
-  margin: 20px;
-`
-
-const dialButton = css``
 
 const backspaceButton = css``
 
@@ -319,7 +311,7 @@ export class DialPad extends React.Component {
           'Content-Type': 'application/x-www-form-urlencoded'
         },
         method: 'POST',
-        body: `From=${from}&To=${number}&Worker=${workerContactUri}&Internal=${internal}`
+        body: `From=${from}&To=${number}&Worker=${workerContactUri}&Internal=${internal}&Token=${this.props.jweToken}`
       })
       .then(response => response.json())
       .then(json => {
@@ -344,36 +336,41 @@ export class DialPad extends React.Component {
   ];
 
   buttons = this.numbers.map((row, i) => {
+
     let originalThis = this;
+    const { classes } = this.props;
 
     return (
       <div className={buttonRow} key={i}>
       {
         row.map(function(item, i) {
-          return (<Button size='large' key={item} onClick={e => originalThis.buttonPress(item, originalThis.props.activeCall)}>{item}</Button>);
+          return (<Button size='large' className={classes.button} key={item} onClick={e => originalThis.buttonPress(item, originalThis.props.activeCall)}>{item}</Button>);
         })
       }
     </div>)
   })
 
   functionButtons = () => {
+
+    const { classes } = this.props;
+
     if (this.props.activeView === 'agentdesktop') {
       return (<div/>)
     } else if (this.props.activeCall !== '') {
       if (this.props.isMuted) {
         return (<div>
-          <VolumeMute className={volumeButton} onClick={e => Actions.invokeAction('ToggleMute')}/>
-          <CallEnd className={hangupButton} onClick={e => Actions.invokeAction('HangupCall')}/>
+          <VolumeMute className={classes.button} onClick={e => Actions.invokeAction('ToggleMute')}/>
+          <CallEnd className={classes.button} onClick={e => Actions.invokeAction('HangupCall')}/>
         </div>);
       } else {
         return (<div>
-          <VolumeUp className={volumeButton} onClick={e => Actions.invokeAction('ToggleMute')}/>
-          <CallEnd className={hangupButton} onClick={e => Actions.invokeAction('HangupCall')}/>
+          <VolumeUp className={classes.button} onClick={e => Actions.invokeAction('ToggleMute')}/>
+          <CallEnd className={classes.button} onClick={e => Actions.invokeAction('HangupCall')}/>
         </div>);
       }
     } else {
       return (<div>
-        <Phone className={dialButton} onClick={e => {
+        <Phone className={classes.button} onClick={e => {
           const number = (typeof this.state.plus === 'undefined') ? this.state.screenMainLine : `+${this.state.screenMainLine}`;
           this.setState({screenMainLine: ''});
           this.dial(number, this.props.from, this.props.workerContactUri);
@@ -440,18 +437,24 @@ export class DialPad extends React.Component {
   }
 
   plusButton = () => {
+
+    const { classes } = this.props;
+
     if (this.props.activeView === 'agent-desktop' || this.props.activeView === 'agentdesktop') { //Do not render the screen display if displaying on the main screen
       return <div/>;
     } else {
       return (<div>
-        <Button size='large' key='placeHolder' > </Button>
-        <Button size='large' key='+' onClick={e => this.buttonPress('+', this.props.activeCall)}>+</Button>
-        <Button size='large' key='placeHolder2' > </Button>
+        <Button size='large' key='placeHolder' className={classes.button} > </Button>
+        <Button size='large' key='+' className={classes.button} onClick={e => this.buttonPress('+', this.props.activeCall)}>+</Button>
+        <Button size='large' key='placeHolder2' className={classes.button} > </Button>
       </div>)
     }
   }
 
   render() {
+
+    const { classes } = this.props;
+
     return (
       <div>
         <div className={(this.props.activeView === 'agent-desktop' || this.props.activeView === 'agentdesktop') ? agentDesktop : dialerContainer} >
@@ -462,7 +465,7 @@ export class DialPad extends React.Component {
           <this.plusButton/>
         </div>
         <div className={functionButtons}>
-          <IconButton color='inherit' className={iconButtons} component='div'>
+          <IconButton color='inherit' className={classes.button} component='div'>
             <this.functionButtons/>
           </IconButton>
         </div>

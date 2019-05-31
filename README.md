@@ -69,3 +69,5 @@ MUI buttons
 3/14/2019 - v3.0 - Support for Flex 1.6. Added internal dialing and 3-way conferencing. Multiple breaking changes. Minor bug fixes. If upgrading from a previous version, please re-deploy all functions from src/functions to your Twilio console as most functions received updates.
 
 4/25/2019 - v3.1 - Support for Flex 1.8. Instead of grabbing the url from the state, manager.serviceConfiguration.runtime_domain is used. Task Timeout is now set to 30 seconds instead of the default 24 hours.
+
+5/31/2019 - v3.2 - Added support for Flex 1.9. Validating all JWE tokens in Twilio Functions. Using new version of MUI. Miscellaneous bug fixes.
