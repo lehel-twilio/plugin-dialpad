@@ -1,10 +1,13 @@
 import { FlexPlugin } from 'flex-plugin';
 import React from 'react';
-import DialPad from './DialPad';
-import DialerButton from './DialerButton';
+
 import CallButton from './CallButton';
-import ConferenceButton from './Conference';
-import registerCustomActions from './CustomActions'
+import Conference from './Conference';
+import DialerButton from './DialerButton';
+import Dialpad from './Dialpad';
+
+import dialpadReducer from './reducers/DialpadReducer.js';
+import registerCustomActions from './CustomActions';
 
 export default class DialpadPlugin extends FlexPlugin {
   name = 'DialpadPlugin';
@@ -12,7 +15,7 @@ export default class DialpadPlugin extends FlexPlugin {
   init(flex, manager) {
 
     // get the JWE for authenticating the worker in our Function
-    const jweToken = manager.store.getState().flex.session.ssoTokenPayload.token
+    const jweToken = manager.store.getState().flex.session.ssoTokenPayload.token;
 
     //adds the dial button to the navbar
     flex.SideNav.Content.add(<DialerButton key='sidebardialerbutton'/>);
@@ -37,8 +40,8 @@ export default class DialpadPlugin extends FlexPlugin {
     });
 
     //adds the dialer view
-    flex.ViewCollection.Content.add(<flex.View name='dialer' key='dialpad1'><DialPad key='dialpad2' insightsClient={manager.insightsClient} runtimeDomain={manager.serviceConfiguration.runtime_domain} jweToken={jweToken}/></flex.View>);
-    flex.CallCanvas.Content.add(<ConferenceButton key='conference' insightsClient={manager.insightsClient} runtimeDomain={manager.serviceConfiguration.runtime_domain} jweToken={jweToken}/>);
+    flex.ViewCollection.Content.add(<flex.View name='dialer' key='dialpad1'><Dialpad key='dialpad2' insightsClient={manager.insightsClient} runtimeDomain={manager.serviceConfiguration.runtime_domain} jweToken={jweToken} mode='dialPad'/></flex.View>);
+    flex.CallCanvas.Content.add(<Conference key='conference' insightsClient={manager.insightsClient} runtimeDomain={manager.serviceConfiguration.runtime_domain} jweToken={jweToken}/>);
 
     //adds the dial button to SMS
     flex.TaskCanvasHeader.Content.add(<CallButton key='callbutton' runtimeDomain={manager.serviceConfiguration.runtime_domain} jweToken={jweToken}/>);
@@ -49,5 +52,8 @@ export default class DialpadPlugin extends FlexPlugin {
     flex.TaskChannels.register(outboundVoiceChannel);
 
     registerCustomActions(manager.serviceConfiguration.runtime_domain, jweToken);
+
+    //Add custom redux store
+    manager.store.addReducer('dialpad', dialpadReducer);
   }
 }

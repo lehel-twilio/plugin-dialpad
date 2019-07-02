@@ -8,7 +8,7 @@ path /add-conference-participant
 const axios = require('axios');
 
 exports.handler = async function(context, event, callback) {
-	const client = context.getTwilioClient();
+	  const client = context.getTwilioClient();
     const workspace = context.TWILIO_WORKSPACE_SID;
     const workflowSid = context.TWILIO_WORKFLOW_SID;
 
