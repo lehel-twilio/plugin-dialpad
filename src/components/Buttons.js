@@ -42,7 +42,7 @@ class Buttons extends React.Component {
       return (
         <div className={buttonRow} key={i}>
         {
-          row.map(function(item, i) {
+          row.map((item, i) => {
             return (<Button size='large' className={classes.button} key={item} onClick={e => originalThis.buttonPress(item)}>{item}</Button>);
           })
         }

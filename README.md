@@ -113,3 +113,7 @@ MUI buttons
 5/31/2019 - v3.2 - Added support for Flex 1.9. Validating all JWE tokens in Twilio Functions. Using new version of MUI. Miscellaneous bug fixes.
 
 7/2/2019 - v4.0 - Complete rewrite of the dialpad. No new features were added in this release. The components of the dialpad were separated out into individual React components and a custom redux store is used to communicate between components. This version requires Flex 1.9 or newer.
+
+8/19/2019 - v4.1 - Dialpad has been migrated to plugin builder v3 (https://www.twilio.com/docs/flex/plugin-builder#plugin-builder-v3). The functions have been migrated to Functions v2 (https://www.twilio.com/docs/runtime). As of this writing, plugin builder v3 cannot deploy to Severless API, the functions have been stripped out and migrated to a separate github repository.
+New features: ability to record outbound calls
+Bug fixes: fixed an error message about task cannot be placed in wrapup status, CSS changes to make it compatible with Salesforce

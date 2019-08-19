@@ -6,7 +6,7 @@ const sharedTheme = (theme) => ({
     flexWrap: 'wrap',
   },
   button: {
-    margin: '10px'
+    margin: '0px'
   },
   functionButton: {
     margin: '10px',

@@ -1,26 +1,52 @@
 {
   "name": "plugin-dialpad",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "private": true,
   "scripts": {
-    "prestart": "flex-check-start",
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "test": "react-app-rewired test --env=jsdom",
-    "eject": "react-app-rewired eject"
+    "bootstrap": "flex-plugin check-start",
+    "postinstall": "npm run bootstrap",
+    "prestart": "npm run bootstrap",
+    "start": "flex-plugin start",
+    "build": "flex-plugin build",
+    "predeploy": "npm run build",
+    "deploy": "flex-plugin deploy",
+    "test": "flex-plugin test --env=jsdom",
+    "list": "flex-plugin list",
+    "clear": "flex-plugin clear",
+    "remove": "flex-plugin remove",
+    "eject": "flex-plugin eject"
   },
   "devDependencies": {
-    "@twilio/flex-ui": "^1.0.0",
+    "@twilio/flex-ui": "^1.12.1",
     "react-app-rewire-flex-plugin": "^1.0.2",
     "react-app-rewired": "^1.6.2"
   },
   "dependencies": {
-    "emotion": "^10.0.9",
-    "flex-plugin": "^1.0.2",
-    "react": "^16.5.2",
-    "react-dom": "^16.5.2",
-    "react-scripts": "1.1.5",
-    "react-select": "^3.0.3"
+    "@craco/craco": "^5.0.2",
+    "babel-polyfill": "^6.26.0",
+    "core-js": "^2.6.5",
+    "craco-config-flex-plugin": "^3.5.0-beta.0",
+    "emotion": "^10.0.14",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.14.0",
+    "flex-plugin": "^3.5.0-beta.0",
+    "flex-plugin-scripts": "^3.5.0-beta.0",
+    "react": "16.5.2",
+    "react-dom": "16.5.2",
+    "react-scripts": "^3.0.0",
+    "react-test-renderer": "^16.8.6"
   },
-  "config-overrides-path": "node_modules/react-app-rewire-flex-plugin"
+  "config-overrides-path": "node_modules/react-app-rewire-flex-plugin",
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
 }
