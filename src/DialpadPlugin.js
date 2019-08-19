@@ -17,6 +17,9 @@ export default class DialpadPlugin extends FlexPlugin {
     // get the JWE for authenticating the worker in our Function
     const jweToken = manager.store.getState().flex.session.ssoTokenPayload.token;
 
+    //const functionsUrl = 'eb0deeab.ngrok.io';
+    const functionsUrl = 'your Functions v2 domain name here' //i.e. plugin-dialpad-functions-7507-dev.twil.io
+
     //adds the dial button to the navbar
     flex.SideNav.Content.add(<DialerButton key='sidebardialerbutton'/>);
 
@@ -29,29 +32,19 @@ export default class DialpadPlugin extends FlexPlugin {
       }
     });
 
-    //Place Task into wrapUp on remote party disconnect
-    manager.voiceClient.on('disconnect', function(connection) {
-      manager.workerClient.reservations.forEach(reservation => {
-        if (reservation.task.attributes.worker_call_sid === connection.parameters.CallSid && reservation.task.taskChannelUniqueName === 'custom1' &&
-              reservation.task.attributes.direction === 'outbound') {
-          reservation.task.wrapUp();
-        };
-      });
-    });
-
     //adds the dialer view
-    flex.ViewCollection.Content.add(<flex.View name='dialer' key='dialpad1'><Dialpad key='dialpad2' insightsClient={manager.insightsClient} runtimeDomain={manager.serviceConfiguration.runtime_domain} jweToken={jweToken} mode='dialPad'/></flex.View>);
-    flex.CallCanvas.Content.add(<Conference key='conference' insightsClient={manager.insightsClient} runtimeDomain={manager.serviceConfiguration.runtime_domain} jweToken={jweToken}/>);
+    flex.ViewCollection.Content.add(<flex.View name='dialer' key='dialpad1'><Dialpad key='dialpad2' insightsClient={manager.insightsClient} runtimeDomain={functionsUrl} jweToken={jweToken} mode='dialPad'/></flex.View>);
+    flex.CallCanvas.Content.add(<Conference key='conference' insightsClient={manager.insightsClient} runtimeDomain={functionsUrl} jweToken={jweToken}/>);
 
     //adds the dial button to SMS
-    flex.TaskCanvasHeader.Content.add(<CallButton key='callbutton' runtimeDomain={manager.serviceConfiguration.runtime_domain} jweToken={jweToken}/>);
+    flex.TaskCanvasHeader.Content.add(<CallButton key='callbutton' runtimeDomain={functionsUrl} jweToken={jweToken}/>);
 
     //create custom task TaskChannel
     const outboundVoiceChannel = flex.DefaultTaskChannels.createCallTaskChannel('custom1',
       (task) => task.taskChannelUniqueName === 'custom1');
     flex.TaskChannels.register(outboundVoiceChannel);
 
-    registerCustomActions(manager.serviceConfiguration.runtime_domain, jweToken);
+    registerCustomActions(functionsUrl, jweToken);
 
     //Add custom redux store
     manager.store.addReducer('dialpad', dialpadReducer);
