@@ -18,7 +18,7 @@ export default class DialpadPlugin extends FlexPlugin {
     const jweToken = manager.store.getState().flex.session.ssoTokenPayload.token;
 
     //const functionsUrl = 'eb0deeab.ngrok.io';
-    const functionsUrl = 'your Functions v2 domain name here' //i.e. plugin-dialpad-functions-7507-dev.twil.io
+    const functionsUrl = 'plugin-dialpad-functions-7507-dev.twil.io';
 
     //adds the dial button to the navbar
     flex.SideNav.Content.add(<DialerButton key='sidebardialerbutton'/>);

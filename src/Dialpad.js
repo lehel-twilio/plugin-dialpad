@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { css } from 'emotion';
 
 import Buttons from './components/Buttons';
 import Directory from './components/Directory';
@@ -9,34 +8,8 @@ import PlusButton from './components/PlusButton';
 import Screen from './components/Screen';
 
 import { buttonPressAction, backspaceAction, setScreenMainLine } from './actions/DialpadActions';
+import { DialpadStyles } from './Dialpad.Styles';
 import { dial } from './helpers';
-
-const dialerContainer = css`
-  display: flex;
-  flex-direction: column;
-  height: 500px;
-  width: 300px;
-  background-color: #FFFFFF;
-`
-
-const dtmf = css`
-  display: flex;
-  flex-direction: column;
-  height: 250px;
-  width: 100%;
-`
-
-const conference = css`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 500px;
-  width: 100%;
-`
-
-const numpadContainer = css`
-  align-self: center;
-`
 
 export class Dialpad extends React.Component {
 
@@ -95,50 +68,29 @@ export class Dialpad extends React.Component {
   }
 
   render() {
+    const { apiBase, isConference, jweToken, mode } = this.props;
 
-    if (this.props.mode === 'none') {
-      return (
-        <div/>
-      )
-    } else if (this.props.mode === 'dtmf') {
-      return (
-        <div>
-          <div className={dtmf}>
-            <div className={numpadContainer}>
-              <Buttons mode={this.props.mode}/>
-            </div>
-          </div>
-        </div>
-      )
-    } else if (this.props.mode === 'conference') {
-      return (
-        <div>
-          <div className={conference}>
-            <Screen/>
-            <Directory workerList={this.state.workerList}/>
-            <div className={numpadContainer}>
-              <Buttons mode={this.props.mode}/>
-              <PlusButton/>
-            </div>
-            <FunctionButtons runtimeDomain={this.props.runtimeDomain} jweToken={this.props.jweToken} mode={this.props.mode}/>
-          </div>
-        </div>
-      )
-    } else {
-      return (
-        <div>
-          <div className={dialerContainer}>
-            <Screen/>
-            <Directory workerList={this.state.workerList}/>
-            <div className={numpadContainer}>
-              <Buttons mode={this.props.mode}/>
-              <PlusButton/>
-            </div>
-            <FunctionButtons runtimeDomain={this.props.runtimeDomain} jweToken={this.props.jweToken} mode={this.props.mode}/>
-          </div>
-        </div>
-      )
+    if (mode === 'none') {
+      return null;
     }
+
+    if (mode === 'dtmf') {
+      return (<Buttons mode={mode} />);
+    }
+
+    return (
+      <DialpadStyles isConference={isConference}>
+        <div className="dialpad-container">
+          <Screen />
+          <Directory workerList={this.state.workerList} />
+          <div className="buttons-container">
+            <Buttons mode={mode} />
+            <PlusButton />
+          </div>
+          <FunctionButtons apiBase={apiBase} jweToken={jweToken} mode={mode} />
+        </div>
+      </DialpadStyles>
+    )
   }
 }
 

@@ -1,5 +1,4 @@
 import React from 'react';
-import { css } from 'emotion';
 import { connect } from 'react-redux';
 import { Actions } from '@twilio/flex-ui';
 import { withTaskContext } from '@twilio/flex-ui';
@@ -17,12 +16,6 @@ import { setScreenMainLine } from '../actions/DialpadActions';
 import { addConferenceParticipant, dial } from '../helpers';
 
 const styles = theme => (sharedTheme(theme));
-
-const functionButtons = css`
-  align-self: center;
-  justify-content: center;
-  padding: 0;
-`
 
 class FunctionButtons2 extends React.Component {
 
@@ -74,7 +67,7 @@ class FunctionButtons2 extends React.Component {
     const { classes } = this.props;
 
     return (
-      <div className={functionButtons}>
+      <div className="function-buttons">
         <IconButton color='inherit' className={classes.functionButton} component='div'>
           <this.functionButtons/>
         </IconButton>
