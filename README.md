@@ -1,5 +1,7 @@
 # Dialpad
 
+A version of this plugin is now natively available in Flex. Please see the documentation here: https://www.twilio.com/docs/flex/dialpad-end-user-guide
+
 Make outbound calls using Twilio Flex!
 
 ![Dialpad](https://zaffre-cow-9057.twil.io/assets/68747470733a2f2f63696e6572656f75732d6d616c6c6172642d343935392e7477696c2e696f2f6173736574732f6469616c7061642e706e67.png)
