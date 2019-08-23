@@ -68,7 +68,7 @@ export class Dialpad extends React.Component {
   }
 
   render() {
-    const { apiBase, isConference, jweToken, mode } = this.props;
+    const { isConference, jweToken, mode } = this.props;
 
     if (mode === 'none') {
       return null;
@@ -87,7 +87,7 @@ export class Dialpad extends React.Component {
             <Buttons mode={mode} />
             <PlusButton />
           </div>
-          <FunctionButtons apiBase={apiBase} jweToken={jweToken} mode={mode} />
+          <FunctionButtons runtimeDomain={this.props.runtimeDomain} jweToken={jweToken} mode={mode} />
         </div>
       </DialpadStyles>
     )
