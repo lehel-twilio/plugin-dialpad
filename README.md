@@ -1,5 +1,7 @@
 # Dialpad
 
+A version of this plugin is now natively available in Flex. Please see the documentation here: https://www.twilio.com/docs/flex/dialpad-end-user-guide
+
 Make outbound calls using Twilio Flex!
 
 ![Dialpad](https://zaffre-cow-9057.twil.io/assets/68747470733a2f2f63696e6572656f75732d6d616c6c6172642d343935392e7477696c2e696f2f6173736574732f6469616c7061642e706e67.png)
@@ -111,3 +113,11 @@ MUI buttons
 4/25/2019 - v3.1 - Support for Flex 1.8. Instead of grabbing the url from the state, manager.serviceConfiguration.runtime_domain is used. Task Timeout is now set to 30 seconds instead of the default 24 hours.
 
 5/31/2019 - v3.2 - Added support for Flex 1.9. Validating all JWE tokens in Twilio Functions. Using new version of MUI. Miscellaneous bug fixes.
+
+7/2/2019 - v4.0 - Complete rewrite of the dialpad. No new features were added in this release. The components of the dialpad were separated out into individual React components and a custom redux store is used to communicate between components. This version requires Flex 1.9 or newer.
+
+8/19/2019 - v4.1 - Dialpad has been migrated to plugin builder v3 (https://www.twilio.com/docs/flex/plugin-builder#plugin-builder-v3). The functions have been migrated to Functions v2 (https://www.twilio.com/docs/runtime). As of this writing, plugin builder v3 cannot deploy to Severless API, the functions have been stripped out and migrated to a separate github repository (https://github.com/lehel-twilio/plugin-dialpad-functions). With this change, you will need to modify Dialpad.js with the location of your Functions v2 domain name.
+New features: ability to record outbound calls
+Bug fixes: fixed an error message about task cannot be placed in wrapup status, CSS changes to make it compatible with Salesforce
+
+8/20/2019 - v4.2 - Dialpad is now inheriting styling from Flex themes. This means that Dialpad now works with dark themes as well.
