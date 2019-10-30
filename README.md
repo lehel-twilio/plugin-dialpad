@@ -121,3 +121,5 @@ New features: ability to record outbound calls
 Bug fixes: fixed an error message about task cannot be placed in wrapup status, CSS changes to make it compatible with Salesforce
 
 8/20/2019 - v4.2 - Dialpad is now inheriting styling from Flex themes. This means that Dialpad now works with dark themes as well.
+
+10/30/2019 - v4.3 - Backend changes to fully support E.164 format. The assumption will be made that if no `+` is entered, and the digits length is 10, then it is a US number. Removed the DTMF mode, as Flex now supports this natively. The Functions v2 runtime domain is now dynamically set based on the value `ui_attributes.dialpadDomain` from https://flex-api.twilio.com/v1/Configuration. The Dialpad Functions project has been updated to automatically set this value after deployment. Fixed an issue with stale jweTokens, now we grab a fresh token before each Function call.

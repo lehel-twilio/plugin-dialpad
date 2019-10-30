@@ -14,11 +14,9 @@ export default class DialpadPlugin extends FlexPlugin {
 
   init(flex, manager) {
 
-    // get the JWE for authenticating the worker in our Function
-    const jweToken = manager.store.getState().flex.session.ssoTokenPayload.token;
-
-    //const functionsUrl = 'eb0deeab.ngrok.io';
-    const functionsUrl = 'plugin-dialpad-functions-7507-dev.twil.io';
+    //Get the Functions v2 runtime domain from Flex configuration
+    const functionsUrl = manager.configuration.dialpadDomain;
+    console.log(`Functions v2 runtime domain: ${functionsUrl}`);
 
     //adds the dial button to the navbar
     flex.SideNav.Content.add(<DialerButton key='sidebardialerbutton'/>);
@@ -33,18 +31,18 @@ export default class DialpadPlugin extends FlexPlugin {
     });
 
     //adds the dialer view
-    flex.ViewCollection.Content.add(<flex.View name='dialer' key='dialpad1'><Dialpad key='dialpad2' insightsClient={manager.insightsClient} runtimeDomain={functionsUrl} jweToken={jweToken} mode='dialPad'/></flex.View>);
-    flex.CallCanvas.Content.add(<Conference key='conference' insightsClient={manager.insightsClient} runtimeDomain={functionsUrl} jweToken={jweToken}/>);
+    flex.ViewCollection.Content.add(<flex.View name='dialer' key='dialpad1'><Dialpad key='dialpad2' insightsClient={manager.insightsClient} runtimeDomain={functionsUrl} manager={manager} mode='dialPad'/></flex.View>);
+    flex.CallCanvas.Content.add(<Conference key='conference' insightsClient={manager.insightsClient} runtimeDomain={functionsUrl} manager={manager}/>);
 
     //adds the dial button to SMS
-    flex.TaskCanvasHeader.Content.add(<CallButton key='callbutton' runtimeDomain={functionsUrl} jweToken={jweToken}/>);
+    flex.TaskCanvasHeader.Content.add(<CallButton key='callbutton' runtimeDomain={functionsUrl} manager={manager}/>);
 
     //create custom task TaskChannel
     const outboundVoiceChannel = flex.DefaultTaskChannels.createCallTaskChannel('custom1',
       (task) => task.taskChannelUniqueName === 'custom1');
     flex.TaskChannels.register(outboundVoiceChannel);
 
-    registerCustomActions(functionsUrl, jweToken);
+    registerCustomActions(functionsUrl, manager);
 
     //Add custom redux store
     manager.store.addReducer('dialpad', dialpadReducer);

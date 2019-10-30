@@ -45,17 +45,17 @@ export class Dialpad extends React.Component {
   eventListener = (e) => this.keyPressListener(e);
 
   pasteListener = (e) => {
+    //check for leading plus
+    if ((e.clipboardData || window.clipboardData).getData('text').substring(0,1) === '+') {
+      this.props.buttonPress('+');
+    }
     const paste = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g,''); //strip all non numeric characters from paste
     this.props.setScreenMainLine((typeof this.props.screenMainLine === 'undefined' ? paste : this.props.screenMainLine + paste))
   }
 
   keyPressListener(e) {
     if ((e.keyCode > 47 && e.keyCode < 58) || e.keyCode === 187) { //listen to 0-9 & +
-      if (this.props.mode === 'dtmf') {
-        this.props.activeCall[0].source.sendDigits(e.key);
-      } else {
-        this.props.buttonPress(e.key);
-      }
+      this.props.buttonPress(e.key);
     } else if (e.keyCode === 8) { //listen for backspace
       this.props.backspace();
     } else if (e.keyCode === 13) { //listen for enter
@@ -68,14 +68,10 @@ export class Dialpad extends React.Component {
   }
 
   render() {
-    const { isConference, jweToken, mode } = this.props;
+    const { isConference, mode, manager, runtimeDomain } = this.props;
 
     if (mode === 'none') {
       return null;
-    }
-
-    if (mode === 'dtmf') {
-      return (<Buttons mode={mode} />);
     }
 
     return (
@@ -87,7 +83,7 @@ export class Dialpad extends React.Component {
             <Buttons mode={mode} />
             <PlusButton />
           </div>
-          <FunctionButtons runtimeDomain={this.props.runtimeDomain} jweToken={jweToken} mode={mode} />
+          <FunctionButtons runtimeDomain={runtimeDomain} manager={manager} mode={mode} />
         </div>
       </DialpadStyles>
     )

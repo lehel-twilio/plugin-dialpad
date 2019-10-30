@@ -1,6 +1,6 @@
 import { Actions } from '@twilio/flex-ui';
 
-export default function (runtimeDomain, jweToken) {
+export default function (runtimeDomain, manager) {
 
   Actions.replaceAction('AcceptTask', (payload, original) => {
     return new Promise((resolve, reject) => {
@@ -8,6 +8,8 @@ export default function (runtimeDomain, jweToken) {
 
       if (payload.task.taskChannelUniqueName === 'custom1' && payload.task.attributes.direction === 'outbound') {
         //Join existing conference as 3rd particpant
+
+        console.log('1');
         if (typeof(reservation.task.attributes.conferenceSid) !== 'undefined') {
           reservation.call(reservation.task.attributes.from,
             `https://${runtimeDomain}/agent-join-conference?conferenceSid=${reservation.task.attributes.conferenceSid}`, {
@@ -15,6 +17,8 @@ export default function (runtimeDomain, jweToken) {
             }
           )
         } else { //Place outbound call
+          console.log('2')
+          console.log(runtimeDomain);
           reservation.call(reservation.task.attributes.from,
             `https://${runtimeDomain}/agent-outbound-join?taskSid=${payload.task.taskSid}`, {
               accept: true
@@ -38,6 +42,7 @@ export default function (runtimeDomain, jweToken) {
         payload.task.complete();
 
         const taskSid = payload.task.attributes.conferenceSid;
+        const jweToken = manager.store.getState().flex.session.ssoTokenPayload.token
         //cleanup the outgoing call
         fetch(`https://${runtimeDomain}/cleanup-rejected-task`, {
           headers: {
@@ -101,6 +106,8 @@ export default function (runtimeDomain, jweToken) {
   })
 
   const toggleHold = function (conference, participant, hold, original, payload) {
+
+    const jweToken = manager.store.getState().flex.session.ssoTokenPayload.token
 
     return fetch(`https://${runtimeDomain}/hold-call`, {
       headers: {

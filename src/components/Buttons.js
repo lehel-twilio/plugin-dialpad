@@ -14,12 +14,7 @@ class Buttons extends React.Component {
   ];
 
   buttonPress(key) {
-
-    if (this.props.activeCall.length > 0 && this.props.mode === 'dtmf') {
-      this.props.activeCall[0].source.sendDigits(key);
-    } else {
-      this.props.buttonPress(key);
-    }
+    this.props.buttonPress(key);
   }
 
   render() {

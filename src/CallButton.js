@@ -34,12 +34,14 @@ export class CallButton extends React.Component {
 
           if (number.length > 0) {
 
+            const jweToken = this.props.manager.store.getState().flex.session.ssoTokenPayload.token;
+
             fetch(`https://${runtimeDomain}/create-new-task`, {
               headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
               },
               method: 'POST',
-              body: `From=${from}&To=${number}&Worker=${workerContactUri}&Token=${this.props.jweToken}`
+              body: `From=${from}&To=${number}&Worker=${workerContactUri}&Token=${jweToken}`
             })
             .then(response => response.json())
             .then(json => {

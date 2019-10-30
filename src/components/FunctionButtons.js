@@ -83,6 +83,7 @@ const mapStateToProps = (state) => {
     activeCall: state.flex.phone.connections,
     directoryWorker: state.dialpad.directoryWorker,
     from: state.flex.worker.attributes.phone,
+    plus: state.dialpad.plus,
     screenMainLine: state.dialpad.screenMainLine,
     workerContactUri: state.flex.worker.attributes.contact_uri,
     workerName: state.flex.worker.attributes.full_name,
